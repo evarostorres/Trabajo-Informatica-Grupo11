@@ -1,8 +1,8 @@
 BLOQUES:
 
 - Iniciar sesión (Eva)→ crear una función que solicite al usuario la contraseña y si  la contraseña no es válida, el programa te lo vuelve a pedir. Para ver si la contraseña es correcta o no, el programa lo compara con un fichero.
-- Registro → si el usuario no tiene cuenta, creará una para después poder iniciar sesión.
-- Menú principal→ Para la gestión del listado de opciones hay que usar switch dentro de un bucle do while. Y en cada case llamar a cada función.
+- Registro (Eva)→ si el usuario no tiene cuenta, creará una para después poder iniciar sesión.
+- Menú principal (Eva)→ Para la gestión del listado de opciones hay que usar switch dentro de un bucle do while. Y en cada case llamar a cada función.
 
 - Listado de actividades (Alba): crear una función que nos muestre todas las actividades disponibles. Dónde pida al usuario el nombre del centro, con un vector recorre la lista de actividades e imprime los detalles de cada actividad.
 
