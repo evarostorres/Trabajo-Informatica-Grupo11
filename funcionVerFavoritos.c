@@ -11,36 +11,39 @@ void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado) {
         return;
     }
 
-    Favorito lista[50];		//Hacemos una lista con la estructura Favorito
+    Favorito lista[100];		//Hacemos un vector de estructuras con la estructura Favorito
     int contador = 0;
     char u[20], c[50], a[50];	//Usuario, centro y actividad leidos del archivo de favoritos (variables temp)
 
 
     printf("\n--- TUS FAVORITOS ---\n");
 
-    // Se leen los tres elementos separados por ;
+    // Se leen los tres elementos separados por ; y se meten en el vector de estructuras
     while (fscanf(archivo, "%19[^;];%49[^;];%49[^\n]\n", u, c, a) == 3) {
         if (strcmp(u, usuarioLogueado) == 0) {
             strcpy(lista[contador].usuario, u);
             strcpy(lista[contador].centro, c);
             strcpy(lista[contador].actividad, a);
             
+            //Se imprimen por pantalla los favoritos
             printf("%d. Centro: %s | Actividad: %s\n", contador + 1, c, a);
             contador++;
         }
     }
     fclose(archivo);
 
-    if (contador == 0) {
+    //Si el contador es 0 quiere decir que el usuario no aparece en el archivo (no tiene favoritos)
+	if (contador == 0) {
         printf("No tienes ninguna actividad en favoritos.\n");
         return;
     }
 
-    int seleccion;
-    printf("\nElige una actividad para gestionar (0 para salir): ");
+    //El usuario selecciona si quiere gestionar alguna actividad
+	int seleccion;
+    printf("\nElige una actividad para gestionar (indica su número o 0 para salir): ");
     scanf("%d", &seleccion);
 
-    if (seleccion > 0 && seleccion <= contador) {
-        gestionar_favorito(lista[seleccion - 1], nombreFichFav, usuarioLogueado);
+	if (seleccion > 0 && seleccion <= contador) {
+        gestionar_favorito(lista[seleccion - 1], nombreFichFav, usuarioLogueado);	//Llamada a la función de gestión de favorito
     }
 }
