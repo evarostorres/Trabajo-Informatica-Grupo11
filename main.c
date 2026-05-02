@@ -3,11 +3,13 @@
 #include <string.h>
 #include "estructProtot.h"
 
+#define MAX_LONG 20
 
 int main() {
 	int opcionAcceso;
 	int opcionMenu;
 	int InSesionExitoso = 0;	// Bandera para saber si podemos pasar al menú principal
+	char usuarioLogueado[MAX_LONG];
 	
 	// Iniciamos sesión o nos registramos antes de entrar al menú (sistema de acceso)
     do {
@@ -21,7 +23,7 @@ int main() {
         switch (opcionAcceso) {
             case 1: 
 				// Si la función devuelve 1, se ha iniciado sesión y forzamos salida del bucle
-                if (iniciar_sesion() == 1) {
+                if (iniciar_sesion(usuarioLogueado) == 1) {
                     InSesionExitoso = 1;
                     opcionAcceso = 3; // Forzamos que la condición del while sea falsa
                 }
@@ -44,6 +46,9 @@ int main() {
         printf("Error al abrir el fichero.\n");
         return -1;
     }
+    
+    
+    //AQUI FALTA LA FUNCION QUE LEA EL FICHERO DE DATOS CON MEMORIA DINAMICA
     
     
     if (InSesionExitoso) {
@@ -72,7 +77,7 @@ int main() {
 	                ver_frecuencia(datos, actividades);     // Llamada a la función
 	                break;
 	            case 4:
-	                favoritos();	// Llamada a la función
+	                ver_favoritos("favoritos.txt", usuarioLogueado);	// Llamada a la función
 	                break;
 	            case 0:
 	                printf("Saliendo del programa. ¡Adios!\n");
