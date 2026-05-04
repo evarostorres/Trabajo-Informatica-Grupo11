@@ -64,3 +64,15 @@ AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n) {//Devuelve un
     fclose(pf); 
     return lista;
 }
+//Esto es lo que se pone en el main
+/*int main() {
+    int n = 0;
+    AnalisisDatos *lista = NULL;
+
+    // Intentar leer el fichero
+    lista = lectura_fichero("dataset (2).csv", &n);
+
+    if (lista == NULL) {
+        printf("Error: No se pudo cargar el archivo o la memoria.\n");
+        return -1;
+    }*/
