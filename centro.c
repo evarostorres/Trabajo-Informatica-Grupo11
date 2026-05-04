@@ -118,7 +118,53 @@ ListaFavoritos cargar_favoritos_usuario(const char *nombreFichFav, const char *u
 
             favoritos.num_favoritos++;
         }
+	}
+	
+void anadir_favorito(const char *nombreFichFav, const char *usuario, const Centro *c)
+{
+	
+if (c == NULL || c->num_actividades == 0)
+    {
+        printf("No hay actividades para anadir a favoritos.\n");
+        return;
     }
+
+    int opcion;
+
+    //Mostrar actividades numeradas
+    printf("\nElige una actividad para anadir a favoritos:\n");
+    for (int i = 0; i < c->num_actividades; i++)
+    {
+        printf("%d. %s (%s - %s)\n", i + 1, c->lista_actividades[i].actividad,
+			c->lista_actividades[i].hora_inicial, c->lista_actividades[i].hora_final);
+    }
+
+    printf("Indica el número de la actividad (0 para cancelar): ");
+    scanf("%d", &opcion);
+
+    if (opcion <= 0 || opcion > c->num_actividades)
+    {
+        printf("Operación cancelada.\n");
+        return;
+    }
+
+    AnalisisDatos act = c->lista_actividades[opcion - 1];
+
+    //Abrir fichero en modo añadir
+    FILE *f = fopen(nombreFichFav, "a");
+    if (f == NULL)
+    {
+        printf("Error: no se pudo abrir el fichero de favoritos.\n");
+        return;
+    }
+
+    //Escribir favorito
+    fprintf(f, "%s;%s;%s\n", usuario, c->nombre, act.actividad);
+
+    fclose(f);
+
+    printf("Actividad anadida a favoritos correctamente.\n");
+}
 	
 	//cerramos el fichero y devolvemos los favoritos con los datos almacenados
     fclose(f);
