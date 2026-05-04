@@ -76,3 +76,5 @@ AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n) {//Devuelve un
         printf("Error: No se pudo cargar el archivo o la memoria.\n");
         return -1;
     }*/
+//Esto se pone en el prototipo
+/* AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n); */
