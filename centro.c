@@ -1,8 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "datos.h"
-#include "centro.h"
+//Estructuras para función añadir a favoritos
+typedef struct {
+	char *usuario;
+	char *actividad;
+	char *centro;
+} Favoritos;
+
+typedef struct {
+    Favoritos *lista;
+    int num_favoritos;
+} ListaFavoritos;
 
 void mostrar_actividades_centro(const Centro *c)
 {
