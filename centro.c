@@ -59,3 +59,57 @@ void mostrar_actividades_centro(const Centro *c)
 		printf("---------------------------------\n");
 	}
 }
+ListaFavoritos cargar_favoritos_usuario(const char *nombreFichFav, const char *usuario)
+{
+	ListaFavoritos favoritos;
+	//Aún no hay favoritos
+	favoritos.lista = NULL;
+	//num_favoritos es un contador
+	favoritos.num_favoritos = 0;
+	
+	FILE *f = fopen(nombreFichFav, "r");
+	if (f == NULL)
+	{
+		printf("Error: no se pudo abrir el fichero de favoritos.\n");
+		return favoritos;
+	}
+	
+	//u, c, a, son variables temporales que sirven para leer el fichero
+	char u[50], c[50], a[50];
+	
+	//Leemos líneas tipo: usuario;centro;actividad
+ 	while (fscanf(f, "%49[^;];%49[^;];%49[^\n]\n", u, c, a) == 3)
+    {
+    	//Si coincide con el usuario se añade a la lista
+    	if (strcmp(u, usuario) == 0)
+    	{
+    		//Ajustamos el tamaño exacto
+    		Favoritos *tmp = realloc(favoritos.lista,(favoritos.num_favoritos + 1) * sizeof(Favoritos));
+			
+			//Si falla nos aseguramos de que no se pierde memoria
+			if (tmp == NULL)
+            {
+                printf("Error de memoria.\n");
+                break;
+            }
+					
+    	    favoritos.lista = tmp;
+    	    
+			//Ahora se copian los datos con memoria dinámica
+			favoritos.lista[favoritos.num_favoritos].usuario = malloc(strlen(u) + 1);
+			favoritos.lista[favoritos.num_favoritos].centro = malloc(strlen(c) + 1);
+			favoritos.lista[favoritos.num_favoritos].actividad = malloc(strlen(a) + 1);
+			
+			//Copiamos los datos con su memoria ajustada a su tamaño
+ 			strcpy(favoritos.lista[favoritos.num_favoritos].usuario, u);
+            strcpy(favoritos.lista[favoritos.num_favoritos].centro, c);
+            strcpy(favoritos.lista[favoritos.num_favoritos].actividad, a);
+
+            favoritos.num_favoritos++;
+        }
+    }
+	
+	//cerramos el fichero y devolvemos los favoritos con los datos almacenados
+    fclose(f);
+    return favoritos;
+}
