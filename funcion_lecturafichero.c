@@ -64,7 +64,7 @@ AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n) {//Devuelve un
     fclose(pf); 
     return lista;
 }
-//Esto es lo que se pone en el main
+//Esto es lo que se pone en la main
 /*int main() {
     int n = 0;
     AnalisisDatos *lista = NULL;
