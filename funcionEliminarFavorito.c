@@ -7,7 +7,7 @@ void eliminar_favorito(Favorito fav, const char *nombreFichFav, const char *usua
     printf("\n ¿Seguro que desea borrar %s de favoritos? (s/n): ", fav.actividad);
     scanf(" %d", &opcion);
 
-    if (opcion == s) {
+    if (opcion == 's' || opcion == 'S') {
     	
         // Lógica de borrado de favorito
         FILE *origen = fopen(nombreFichFav, "r");
