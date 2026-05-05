@@ -54,7 +54,7 @@ void mostrar_actividades_centro(const Centro *c)
 			printf("Tipo: %s\n", acti.tipo_actividad);
 		}
 		
-		printf("Horario: %s - %s\n", acti.hora_inicial, activity.hora_final);
+		printf("Horario: %s - %s\n", acti.hora_inicial, acti.hora_final);
 		printf("Plazas totales: %d\n", acti.plazas);
 		printf("Plazas ocupadas: %d\n", acti.ocupadas);
 		printf("Plazas libres: %d\n", acti.libres);
