@@ -2,7 +2,7 @@
 #include <string.h>
 #include "estructProtot.h" 
 
-void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado) {
+void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado){
     
 	//Abrimos el archivo de favoritos
 	FILE *archivo = fopen(nombreFichFav, "r");
@@ -40,10 +40,10 @@ void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado) {
 
     //El usuario selecciona si quiere gestionar alguna actividad
 	int seleccion;
-    printf("\nElige una actividad para gestionar (indica su número o 0 para salir): ");
+    printf("\nSi desea eliminar una actividad seleccionela (indica su número) o pulse 0 para salir: ");
     scanf("%d", &seleccion);
 
 	if (seleccion > 0 && seleccion <= contador) {
-        gestionar_favorito(lista[seleccion - 1], nombreFichFav, usuarioLogueado);	//Llamada a la función de gestión de favorito
+        eliminar_favorito(lista[seleccion - 1], nombreFichFav, usuarioLogueado);	//Llamada a la función de eliminar favorito
     }
 }
