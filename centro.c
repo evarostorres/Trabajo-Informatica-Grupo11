@@ -70,6 +70,45 @@ void mostrar_actividades_centro(const Centro *c)
 		printf("---------------------------------\n");
 	}
 }
+Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos)
+{
+	
+Centro c;
+    int i;
+    int contador = 0;
+
+    //Copiar el nombre del centro
+    c.nombre = malloc(strlen(nombre) + 1);
+    strcpy(c.nombre, nombre);
+
+    //Primero contamos actividades
+    for (i = 0; i < num_datos; i++)
+    {
+        if (strcmp(datos[i].centro_deportivo, nombre) == 0)
+        {
+            contador++;
+        }
+    }
+
+    c.num_actividades = contador;
+
+    //Reservamos memoria para las actividades del centro
+    c.lista_actividades = malloc(contador * sizeof(AnalisisDatos));
+
+    //Después copiamos las actividades
+    int indice = 0;
+    for (i = 0; i < num_datos; i++)
+    {
+        if (strcmp(datos[i].centro_deportivo, nombre) == 0)
+        {
+            c.lista_actividades[indice] = datos[i];
+            indice++;
+        }
+    }
+
+    return c;
+}
+
 ListaFavoritos cargar_favoritos_usuario(const char *nombreFichFav, const char *usuario)
 {
 	ListaFavoritos favoritos;
