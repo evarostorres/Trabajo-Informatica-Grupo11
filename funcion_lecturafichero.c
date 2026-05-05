@@ -29,7 +29,7 @@ AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n) {//Devuelve un
         }
     }
 
-    // Si el archivo tiene datos, saltamos la línea de títulos
+    // 1.Si el archivo tiene datos, saltamos la línea de títulos
     if (*n > 1) {
         fseek(pf, posicion, SEEK_SET);
     } else {
@@ -46,35 +46,19 @@ AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n) {//Devuelve un
         return NULL;
     }
 
-    // 2. Leer los datos uno por uno
+    // 2. Leer los datos uno por uno sin contar la linea de títulos
     for (i = 0; i < total_lineas; i++) {
         // fscanf leerá cada campo separado por espacios
-        if (fscanf(pf, "%d %d %d %s %s %s %s %s %s %d %d %d %s",
+        fscanf(pf, "%d %d %d %s %s %s %s %s %s %d %d %d %s",
                &lista[i].ano, &lista[i].mes, &lista[i].dia,
                lista[i].dia_semana, lista[i].hora_inicial, lista[i].hora_final,
                lista[i].actividad, lista[i].modalidad, lista[i].centro_deportivo,
                &lista[i].plazas, &lista[i].ocupadas, &lista[i].libres, 
-               lista[i].tipo_actividad) != 13) { 
-           //Si no lee los 13 campos, descarta esa línea y sigue
-           	 while ((c = fgetc(pf)) != '\n' && c != EOF);
-        }
+               lista[i].tipo_actividad);
+           
     }
 
-    *n = total_lineas;
+    *n = total_lineas; // Ejemplo: ahora n pasa de ser 30 lineas, a ser total_lineas (que hemos dicho que son 29 lineas). Esto apunta a el main.
     fclose(pf); 
     return lista;
 }
-//Esto es lo que se pone en la main
-/*int main() {
-    int n = 0;
-    AnalisisDatos *lista = NULL;
-
-    // Intentar leer el fichero
-    lista = lectura_fichero("dataset (2).csv", &n);
-
-    if (lista == NULL) {
-        printf("Error: No se pudo cargar el archivo o la memoria.\n");
-        return -1;
-    }*/
-//Esto se pone en el prototipo
-/* AnalisisDatos* lectura_fichero(const char* nombrearchivo, int* n); */
