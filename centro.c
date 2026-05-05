@@ -20,56 +20,62 @@ void mostrar_actividades_centro(const Centro *c)
 	int i;
 	AnalisisDatos acti;
 	
+	// El usuario selecciona una opción no válida
 	if (c == NULL)
 	{
 		printf("Centro no válido\n");
 		return;
 	}
 	
+	//Se imprime el centro deportivo que ha seleccionado y se le asigna a c
 	printf("Centro deportivo: %s\n", c->nombre);
 	printf("---------------------------------\n");
 	
+	
+    //printf("Añadir a favoritos\n");
+	
+	// Si el numero de actividades del que dispone el centro es 0
 	if (c->num_actividades == 0)
 	{
 		printf("Este centro no tiene actividades disponibles\n");
 		return;
 	}
 	
-	for (i = 0; i < c->num_actividad; i++)
+	// Se muestra la lista de actividades según el tipo
+	for (i = 0; i < c->num_actividades; i++)
 	{
-		actividad == c->num_actividad[i];
+		AnalisisDatos acti = c->lista_actividades[i];
+
+    	printf("Actividad: %s\n", acti.actividad);
 		
-		printf("Actividad: %s\n", acti.actividad);
-		
-		if( strcmp(acti.tipo_actividad, "actividad_dirigida") == 0)
-		{
-			printf("Tipo: Actividad dirigida\n");
-		}
-		else if (strcmp(acti.tipo_actividad, "uso_libre") == 0)
-		{
-			print("Tipo: Uso libre\n");
-		}
-		else
-		{
-			printf("Tipo: %s\n", acti.tipo_actividad);
-		}
-		
-		printf("Horario: %s - %s\n", acti.hora_inicial, acti.hora_final);
-		printf("Plazas totales: %d\n", acti.plazas);
-		printf("Plazas ocupadas: %d\n", acti.ocupadas);
-		printf("Plazas libres: %d\n", acti.libres);
-		
-		if (actividad.libres == 0)
-		{
-			printf("Estado: completo\n");
-		}
-		else 
-		{
-			printf("Estado: plazas disponibles");
-		}
-		printf("---------------------------------\n");
+		//Comparamos cadenas para ver si son actividades dirigidas o de uso libre
+		if (acti.tipo_actividad != NULL && strcmp(acti.tipo_actividad, "actividad_dirigida") == 0)
+	    {
+	        printf("Tipo: Actividad dirigida\n");
+	    }
+	    else if (acti.tipo_actividad != NULL && strcmp(acti.tipo_actividad, "uso_libre") == 0)
+	    {
+	        printf("Tipo: Uso libre\n");
+	    }
+	    else if (acti.tipo_actividad != NULL)
+	    {
+	        printf("Tipo: %s\n", acti.tipo_actividad);
+	    }
+	    else
+	    {
+	        printf("Tipo: No especificado\n");
+	    }
+	
+	    printf("Horario: %s - %s\n", acti.hora_inicial, acti.hora_final);
+	    printf("Plazas totales: %d\n", acti.plazas);
+	    printf("Plazas ocupadas: %d\n", acti.ocupadas);
+	    printf("Plazas libres: %d\n", acti.libres);
+	
+	    printf("Estado: %s\n", acti.libres == 0 ? "Completo" : "Plazas disponibles");
+	    printf("---------------------------------\n");
 	}
 }
+
 Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos)
 {
 	
