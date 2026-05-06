@@ -3,44 +3,73 @@
 #include <string.h>
 
 #include "datos.h"
-//Estructuras para función añadir a favoritos
-typedef struct {
-	char *usuario;
-	char *actividad;
-	char *centro;
-} Favoritos;
 
-typedef struct {
-    Favoritos *lista;
-    int num_favoritos;
-} ListaFavoritos;
+int mostrar_centros(AnalisisDatos *datos, int num_datos, char centros[][100])
+{
+    //contador de centros
+	int num_centros = 0;
+    
+	int repetido;
+	int i, j;
+	
+	//Recorremos la base de datos
+    for ( i = 0; i < num_datos; i++)
+    {
+    	//variable bandera inicializada como falso, centro no repetido
+    	repetido = 0;
+    	
+        for (int j = 0; j < num_centros; j++)
+        {
+        	//Comprobamos si ya existe el centro de la base de datos en el vectos lista de centros
+            if (strcmp(centros[j], datos[i].centro_deportivo) == 0)
+            {
+            	//Si está repetido la bandera toma el valor verdadero
+                repetido = 1;
+                //Salimos del bucle, ya hemos encontrado centro repetido
+                break;
+            }
+        }
 
-//Estructura centro adaptada 
-typedef struct {
-    char nombre[100];                   // Nombre del centro
-    int num_actividades;                // Cuántas actividades tiene
-    AnalisisDatos *lista_actividades;   // Vector dinámico de actividades
-} Centro;
+        /*Si repetido entra con valor verdadero (centro repetido) entonces no se ejecuta el "if", 
+		pero si entra con valor falso (centro no repetido) se ejecuta */
+        if (!repetido)
+        {
+        	//Copiamos el centro en nuestro vector lista de centros
+            strcpy(centros[num_centros], datos[i].centro_deportivo);
+
+            printf("%d. %s\n", num_centros + 1, centros[num_centros]);
+
+            num_centros++;
+        }
+    }
+
+    return num_centros;
+}
 
 void mostrar_actividades_centro(const Centro *c)
 {
     int i;
 
+	//Comprobamos que no se elija una opción no válida
     if (c == NULL)
     {
         printf("Centro no valido\n");
         return;
     }
-
+	
+	//Se imprime el nombre del centro seleccionado
     printf("Centro deportivo: %s\n", c->nombre);
     printf("---------------------------------\n");
 
+	//Comprobamos que el centro tenga actividades disponibles
     if (c->num_actividades == 0)
     {
         printf("Este centro no tiene actividades disponibles\n");
         return;
     }
-
+	
+	/*Imprimimos información de las actividades comparando con la base 
+	de datos para saber de que tipo es */
     for (i = 0; i < c->num_actividades; i++)
     {
         AnalisisDatos acti = c->lista_actividades[i];
@@ -82,7 +111,7 @@ void mostrar_actividades_centro(const Centro *c)
 Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos)
 {
 	
-Centro c;
+	Centro c;
     int i;
     int contador = 0;
 
