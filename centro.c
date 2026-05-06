@@ -15,6 +15,13 @@ typedef struct {
     int num_favoritos;
 } ListaFavoritos;
 
+//Estructura centro adaptada 
+typedef struct {
+    char nombre[100];                   // Nombre del centro
+    int num_actividades;                // Cuántas actividades tiene
+    AnalisisDatos *lista_actividades;   // Vector dinámico de actividades
+} Centro;
+
 void mostrar_actividades_centro(const Centro *c)
 {
     int i;
