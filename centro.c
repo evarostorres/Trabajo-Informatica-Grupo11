@@ -17,64 +17,60 @@ typedef struct {
 
 void mostrar_actividades_centro(const Centro *c)
 {
-	int i;
-	AnalisisDatos acti;
-	
-	// El usuario selecciona una opción no válida
-	if (c == NULL)
-	{
-		printf("Centro no válido\n");
-		return;
-	}
-	
-	//Se imprime el centro deportivo que ha seleccionado y se le asigna a c
-	printf("Centro deportivo: %s\n", c->nombre);
-	printf("---------------------------------\n");
-	
-	
-    //printf("Añadir a favoritos\n");
-	
-	// Si el numero de actividades del que dispone el centro es 0
-	if (c->num_actividades == 0)
-	{
-		printf("Este centro no tiene actividades disponibles\n");
-		return;
-	}
-	
-	// Se muestra la lista de actividades según el tipo
-	for (i = 0; i < c->num_actividades; i++)
-	{
-		AnalisisDatos acti = c->lista_actividades[i];
+    int i;
 
-    	printf("Actividad: %s\n", acti.actividad);
+    if (c == NULL)
+    {
+        printf("Centro no valido\n");
+        return;
+    }
+
+    printf("Centro deportivo: %s\n", c->nombre);
+    printf("---------------------------------\n");
+
+    if (c->num_actividades == 0)
+    {
+        printf("Este centro no tiene actividades disponibles\n");
+        return;
+    }
+
+    for (i = 0; i < c->num_actividades; i++)
+    {
+        AnalisisDatos acti = c->lista_actividades[i];
+
+        printf("Actividad: %s\n", acti.actividad);
+
+        if (strcmp(acti.tipo_actividad, "actividad_dirigida") == 0)
+        {
+            printf("Tipo: Actividad dirigida\n");
+        }
+        else if (strcmp(acti.tipo_actividad, "uso_libre") == 0)
+        {
+            printf("Tipo: Uso libre\n");
+        }
+        else
+        {
+            printf("Tipo: %s\n", acti.tipo_actividad);
+        }
+
+        printf("Horario: %s - %s\n", acti.hora_inicial, acti.hora_final);
+        printf("Plazas totales: %d\n", acti.plazas);
+        printf("Plazas ocupadas: %d\n", acti.ocupadas);
+        printf("Plazas libres: %d\n", acti.libres);
+
+        if (acti.libres == 0)
+		{
+		    printf("Estado: Completo\n");
+		}
+		else
+		{
+		    printf("Estado: Plazas disponibles\n");
+		}
 		
-		//Comparamos cadenas para ver si son actividades dirigidas o de uso libre
-		if (acti.tipo_actividad != NULL && strcmp(acti.tipo_actividad, "actividad_dirigida") == 0)
-	    {
-	        printf("Tipo: Actividad dirigida\n");
-	    }
-	    else if (acti.tipo_actividad != NULL && strcmp(acti.tipo_actividad, "uso_libre") == 0)
-	    {
-	        printf("Tipo: Uso libre\n");
-	    }
-	    else if (acti.tipo_actividad != NULL)
-	    {
-	        printf("Tipo: %s\n", acti.tipo_actividad);
-	    }
-	    else
-	    {
-	        printf("Tipo: No especificado\n");
-	    }
-	
-	    printf("Horario: %s - %s\n", acti.hora_inicial, acti.hora_final);
-	    printf("Plazas totales: %d\n", acti.plazas);
-	    printf("Plazas ocupadas: %d\n", acti.ocupadas);
-	    printf("Plazas libres: %d\n", acti.libres);
-	
-	    printf("Estado: %s\n", acti.libres == 0 ? "Completo" : "Plazas disponibles");
-	    printf("---------------------------------\n");
-	}
+        printf("---------------------------------\n");
+    }
 }
+
 
 Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos)
 {
@@ -84,7 +80,6 @@ Centro c;
     int contador = 0;
 
     //Copiar el nombre del centro
-    c.nombre = malloc(strlen(nombre) + 1);
     strcpy(c.nombre, nombre);
 
     //Primero contamos actividades
@@ -101,6 +96,14 @@ Centro c;
     //Reservamos memoria para las actividades del centro
     c.lista_actividades = malloc(contador * sizeof(AnalisisDatos));
 
+	//Comprobación de que se ha reservado bien la memoria
+	if (c.lista_actividades == NULL)
+	{
+	    printf("Error de memoria\n");
+	    c.num_actividades = 0;
+	    return c;
+	}
+		
     //Después copiamos las actividades
     int indice = 0;
     for (i = 0; i < num_datos; i++)
@@ -138,33 +141,21 @@ ListaFavoritos cargar_favoritos_usuario(const char *nombreFichFav, const char *u
     {
     	//Si coincide con el usuario se añade a la lista
     	if (strcmp(u, usuario) == 0)
-    	{
-    		//Ajustamos el tamaño exacto
-    		Favoritos *tmp = realloc(favoritos.lista,(favoritos.num_favoritos + 1) * sizeof(Favoritos));
-			
-			//Si falla nos aseguramos de que no se pierde memoria
-			if (tmp == NULL)
-            {
-                printf("Error de memoria.\n");
-                break;
-            }
-					
-    	    favoritos.lista = tmp;
-    	    
-			//Ahora se copian los datos con memoria dinámica
-			favoritos.lista[favoritos.num_favoritos].usuario = malloc(strlen(u) + 1);
-			favoritos.lista[favoritos.num_favoritos].centro = malloc(strlen(c) + 1);
-			favoritos.lista[favoritos.num_favoritos].actividad = malloc(strlen(a) + 1);
-			
-			//Copiamos los datos con su memoria ajustada a su tamaño
+    	{   
+			//Copiamos los datos 
  			strcpy(favoritos.lista[favoritos.num_favoritos].usuario, u);
             strcpy(favoritos.lista[favoritos.num_favoritos].centro, c);
             strcpy(favoritos.lista[favoritos.num_favoritos].actividad, a);
 
             favoritos.num_favoritos++;
         }
-	}
-	
+    }
+	//cerramos el fichero y devolvemos los favoritos con los datos almacenados
+    fclose(f);
+    return favoritos;
+}
+
+
 void anadir_favorito(const char *nombreFichFav, const char *usuario, const Centro *c)
 {
 	
@@ -193,8 +184,6 @@ if (c == NULL || c->num_actividades == 0)
         return;
     }
 
-    AnalisisDatos act = c->lista_actividades[opcion - 1];
-
     //Abrir fichero en modo añadir
     FILE *f = fopen(nombreFichFav, "a");
     if (f == NULL)
@@ -204,14 +193,9 @@ if (c == NULL || c->num_actividades == 0)
     }
 
     //Escribir favorito
-    fprintf(f, "%s;%s;%s\n", usuario, c->nombre, act.actividad);
+    fprintf(f, "%s;%s;%s\n", usuario, c->nombre, c->lista_actividades[opcion - 1].actividad);
 
     fclose(f);
 
     printf("Actividad anadida a favoritos correctamente.\n");
-}
-	
-	//cerramos el fichero y devolvemos los favoritos con los datos almacenados
-    fclose(f);
-    return favoritos;
 }
