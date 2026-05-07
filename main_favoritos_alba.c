@@ -5,8 +5,7 @@
 #include "datos.h"
 int main (void)
 {
-    AnalisisDatos *datos;
-    int num_datos;
+    AnalisisDatos *lista;
 	int n;
 	
 	char centros[100][100];
@@ -25,7 +24,7 @@ int main (void)
         usuario[strlen(usuario) - 1] = '\0';
 
     //Cargar datos del CSV 
-    datos = lectura_fichero("dataset (2).csv", &num_datos);
+    lista = lectura_fichero("dataset (2).csv", &num_datos);
 
     if (datos == NULL || num_datos == 0)
     {
@@ -34,12 +33,12 @@ int main (void)
     }
     
     //Crear estructura Centro a partir de los datos
-    centro_usuario = crear_centro_por_nombre(nombre_centro, datos, num_datos);
+    centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 
 	//Mostramos al usuario la lista de centros 
 	printf("\nLista de centros disponibles:\n");
 	
-	num_centros = mostrar_centros(datos, num_datos, centros);
+	num_centros = mostrar_centros(lista, n, centros);
 	
 	
 	printf("\nElige un centro (numero): ");
@@ -56,7 +55,7 @@ int main (void)
 	strcpy(nombre_centro, centros[opcion - 1]);
 	
 	//Agrupamos las actividades por centro
-	centro_usuario = crear_centro_por_nombre(nombre_centro, datos, num_datos);
+	centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 
 
     //Mostrar actividades
@@ -64,9 +63,8 @@ int main (void)
 	
 	//Liberamos memoria 
 	free(centro_usuario.lista_actividades);
-	free(datos);
+	free(lista);
 	
 	return 0;
 }
-    return 0;
 }
