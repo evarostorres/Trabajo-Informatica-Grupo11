@@ -2,103 +2,88 @@
 #include <string.h>
 #include "EstructProtot.h"
 
-// Aquí es dónde se ejecuta la función
-void reservar_actividad(AnalisisDatos lista[], int n){ 
-	int anio;
-	int mes;
-	int dian; 
-	char centro[100];
-	char nombreactividad[50]; 
-	char modalidad[30];
-	char diasemana[20];
-	char horai[10];
-	char horaf[10];
-	char tipactividad[20];
+void reservar_actividad(AnalisisDatos lista[], int n){
+  	char centros[100][100];
+    char nombre_centro[100];
+
+    int num_centros;
+	
+	Centro Centro_usuario;
+	int opcion_centro;
+	int opcion_act;
 	int i;
-	int encontrado; 
-	int opcion = 2;
-	
+	int salir = 0;
 
+	//LLAMADA FUNCION 1
+	num_centros = mostrar_centros(lista, n, centros);
+	printf("\n-------Lista de centros -------\n");
+
+	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el numero correcto
+	
+		
+		printf("Selecciona un numero del centro donde se quiere apuntar(a-%d): ", num_centros);
+		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posicion, del centro.
+		
+	}while(opcion_centro<1 || opcion_centro>num_centros);
+	
+	
+	//LLAMADA FUNCION 2
+	strcpy(nombre_centro, centros[opcion_centro - 1]);	 // En el 1 argumento le restamos 1, pq es una cadena	
+	Centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
+
+	printf("\n-------Lista de actividades por centro -------\n");
+	// imprimios la lista de actividades
+	for(i = 0; i<Centro_usuario.num_actividades; i++){ // El punto sirve para acceder a la estructura
+		printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso
+    	Centro_usuario.lista_actividades[i].actividad,
+    	Centro_usuario.lista_actividades[i].hora_inicial,
+        Centro_usuario.lista_actividades[i].hora_final,
+   		Centro_usuario.lista_actividades[i].libres);
+		
+	}
+	//Selección de actividad q desea reservar
 	do{
-		encontrado = 0; // Igualamos el encontrado a 0, ya que suponemos que no ha encontrado la actividad, pero en el caso de que haya un cambio no se repite el bucle.
-		 printf("\n--- Reserva actividad ---\n");
-		
-		printf("Introduce el anio:");
-		scanf("%i", &anio);
-		
-		printf("Intrdouce el  mes(numero):");
-		scanf("%i", &mes);
-		
-		printf("Introduce el dia (numero):");
-   		scanf("%d", &dian); 
-   		
-   		printf("Introduce el dia de la semana:");
-   		scanf(" %[^\n]", diasemana); 
-   					
-		printf("Introduce la hora inicial:");
-		scanf(" %[^\n]",horai); 
-		
-		printf("Introduce la hora final:");
-		scanf(" %[^\n]",horaf); 
-		
-		printf("Introduce la actividad a la que se quiere apuntar: "); 
-		scanf(" %[^\n]", nombreactividad); 
-		
-		printf("Modalidad: ");
-		scanf(" %[^\n]", modalidad);
-		
-		printf("Introduce el centro deportivo:");
-		scanf(" %[^\n]",centro); 
-		
-		printf("Introduce el tipo de actividad:");
-		scanf(" %[^\n]",tipactividad); 
-		
-		
-
-		
-		
-		//strcmp sirve para comparar cadenas, si devulve 0,que significa que los textos son iguales. 
-		// El strcmp compara dos cadenas de caraceteres. En este caso queremos comporar los caracteres de la lista
-		// El punto es para que dentro del vector de la lista comprare cada apartado con otro
-		for(i = 0; i<n; i++){
-			if(lista[i].ano == anio && lista[i].mes == mes &&lista[i].dia == dian && strcmp(lista[i].dia_semana, diasemana)==0 &&strcmp(lista[i].hora_inicial, horai)==0
-			&&strcmp(lista[i].hora_final, horaf)==0 && strcmp(lista[i].actividad, nombreactividad)==0 && strcmp(lista[i].modalidad, modalidad)==0
-			&&strcmp(lista[i].centro_deportivo,centro)==0	&& strcmp(lista[i].tipo_actividad,tipactividad)==0){
-			
-			 	
-				encontrado=1; // Encuentra a actividad
-				
-				
-				// Ahora hay que ver si hay plazas libres
-				if(lista[i].libres > 0){ // Si es mayor a 0, es 1 por lo q hay plazas libres.
-					printf("Hay plazas. Reserva confirmada\n ");
-					lista[i].libres --;
-					lista[i].ocupadas++;
-				
-					opcion = 2; //Sirve para salir del bucle
-				
-				}else{
-					printf("No quedan plazas disponibles\n");
-					printf("Seleccione una opcion: 1 Volver a introducir los datos/ 2 Salir de la opcion reserva\n");
-					scanf("%i", &opcion); // Guarda el número en la variable opcion q hay aelegido el usuario
-					
-					
-		
+		printf("Selecciona un numero de la actividad a la que se quiere apuntar ", num_centros);
+		scanf("%i", &opcion_act);	
+	}while(opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
 	
-				}
-					break; //salimos del for
-					
+	opcion_act--;
+	
+	while(salir ==0){
+
+	//Ahora reservamos la actividad
+	if(Centro_usuario.lista_actividades[opcion_act].libres > 0){
+		for(i = 0; i<n; i++){
+			if(strcmp(lista[i].centro_deportivo, Centro_usuario.nombre)==0 && strcmp(lista[i].actividad,Centro_usuario.lista_actividades[opcion_act].actividad)==0
+			&& strcmp(lista[i].hora_inicial,Centro_usuario.lista_actividades[opcion_act].hora_inicial)== 0){
+				
+				lista[i].ocupadas++;
+                lista[i].libres--;
+                printf("La reserva confirmada\n");
+                
+                salir = 1; 
+                
+                break;
+				
 			}
 		}
+	//En el caso q no haya plazas
+	}else{
+		int opcion;
+		printf("No hay plazas disponibles\n"); 
+		printf("1. Volver a intentar: \n");
+		printf("2. Salir: \n");
 	
-		if(encontrado == 0){ //Si no la encuentra entones te da las opciones, si seleccionas 
-            printf("No quedan existe la actividad que desea reservar\n");
-			printf("Seleccione una opcion: 1 Volver a introducir los datos/ 2 Salir de la opcion reserva\n");
-			scanf("%i", &opcion);
-		}
-		
-	}while(opcion==1); //Si encontrado es 0, es decir se cumeple que cuando enontrado = 0 si se repite el bucle. Si el usuario introduce el 1 se repite el bucle
-	//Si elige la opción 1, entonces es verdadera la condición y se vuelve a ejecutar el bucle
+		scanf("%d", &opcion); 
+			if(opcion == 2){
+				salir = 1;
+			}else{
+				do{
+				printf("Selecciona otra actividad: ");
+           		scanf("%d", &opcion_act);
+				}while(opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
+				opcion_act--;
+			}
+		}		
+	}
 }
-//Prototipo void reservar_actividad(AnalisisDatos lista[], int n);
-//Llamda  		reservar_actividad(lista, n);
