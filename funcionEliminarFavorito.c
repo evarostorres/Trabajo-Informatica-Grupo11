@@ -3,9 +3,9 @@
 #include "estructProtot.h" 
 
 void eliminar_favorito(Favorito fav, const char *nombreFichFav, const char *usuarioLogueado) {
-    int opcion;
+    char opcion;
     printf("\n ¿Seguro que desea borrar %s de favoritos? (s/n): ", fav.actividad);
-    scanf(" %d", &opcion);
+    scanf(" %c", &opcion);
 
     if (opcion == 's' || opcion == 'S') {
     	
