@@ -18,11 +18,11 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 	num_centros = mostrar_centros(lista, n, centros);
 	printf("\n-------Lista de centros -------\n");
 
-	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el numero correcto
+	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el número correcto
 	
 		
 		printf("Selecciona un numero del centro donde se quiere apuntar(1-%d): ", num_centros);
-		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posicion, del centro.
+		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posición, del centro.
 		
 	}while(opcion_centro<1 || opcion_centro>num_centros);
 	
@@ -34,14 +34,14 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 	printf("\n-------Lista de actividades por centro -------\n");
 	// imprimios la lista de actividades
 	for(i = 0; i<Centro_usuario.num_actividades; i++){ // El punto sirve para acceder a la estructura
-		printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso
+		printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso, ya que si introduce 1, la posición es 0
     	Centro_usuario.lista_actividades[i].actividad,
     	Centro_usuario.lista_actividades[i].hora_inicial,
         Centro_usuario.lista_actividades[i].hora_final,
    		Centro_usuario.lista_actividades[i].libres);
 		
 	}
-	//Selección de actividad q desea reservar
+	//Selección de la  actividad q desea reservar
 	do{
 		printf("Selecciona un numero de la actividad a la que se quiere apuntar ", num_centros);
 		scanf("%i", &opcion_act);	
