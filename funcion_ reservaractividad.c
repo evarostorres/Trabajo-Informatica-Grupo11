@@ -25,10 +25,9 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posición, del centro.
 		
 	}while(opcion_centro<1 || opcion_centro>num_centros);
-	
+	strcpy(nombre_centro, centros[opcion_centro - 1]);	 // En el 1 argumento le restamos 1, pq es una cadena	
 	
 	//LLAMADA FUNCION 2
-	strcpy(nombre_centro, centros[opcion_centro - 1]);	 // En el 1 argumento le restamos 1, pq es una cadena	
 	Centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 
 	printf("\n-------Lista de actividades por centro -------\n");
