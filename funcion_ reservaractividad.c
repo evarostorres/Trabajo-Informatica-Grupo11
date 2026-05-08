@@ -72,7 +72,7 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 		int opcion;
 		int encontrada = 0;
 		printf("No hay plazas disponibles\n");
-		printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS SELECCINADOS:\n");
+		printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS DE LA ACTIVIDAD SELECCIONADA:\n");
 		
 		
 		for(i = 0; i<Centro_usuario.num_actividades; i++){
