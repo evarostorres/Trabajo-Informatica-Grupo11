@@ -21,7 +21,7 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el numero correcto
 	
 		
-		printf("Selecciona un numero del centro donde se quiere apuntar(a-%d): ", num_centros);
+		printf("Selecciona un numero del centro donde se quiere apuntar(1-%d): ", num_centros);
 		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posicion, del centro.
 		
 	}while(opcion_centro<1 || opcion_centro>num_centros);
@@ -59,7 +59,7 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 				
 				lista[i].ocupadas++;
                 lista[i].libres--;
-                printf("La reserva confirmada\n");
+                printf("RESERVA CONFIRMADA\n");
                 
                 salir = 1; 
                 
@@ -70,7 +70,29 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 	//En el caso q no haya plazas
 	}else{
 		int opcion;
-		printf("No hay plazas disponibles\n"); 
+		int encontrada = 0;
+		printf("No hay plazas disponibles\n");
+		printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS SELECCINADOS:\n");
+		
+		
+		for(i = 0; i<Centro_usuario.num_actividades; i++){
+			if(strcmp(Centro_usuario.lista_actividades[i].hora_inicial, Centro_usuario.lista_actividades[opcion_act].hora_inicial)==0
+			&&strcmp(Centro_usuario.lista_actividades[i].hora_final, Centro_usuario.lista_actividades[opcion_act].hora_final)==0
+			&& Centro_usuario.lista_actividades[i].libres>0 && i != opcion_act){ 
+				printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso
+		    	Centro_usuario.lista_actividades[i].actividad,
+		    	Centro_usuario.lista_actividades[i].hora_inicial,
+		        Centro_usuario.lista_actividades[i].hora_final,
+		   		Centro_usuario.lista_actividades[i].libres);
+				
+				encontrada = 1;
+				
+			}
+			
+		} 
+		if(encontrada ==0){
+			printf("NO quedan actividades a esa hora\n");
+		}
 		printf("1. Volver a intentar: \n");
 		printf("2. Salir: \n");
 	
@@ -80,7 +102,7 @@ void reservar_actividad(AnalisisDatos lista[], int n){
 			}else{
 				do{
 				printf("Selecciona otra actividad: ");
-           		scanf("%d", &opcion_act);
+           			scanf("%d", &opcion_act);
 				}while(opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
 				opcion_act--;
 			}
