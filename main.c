@@ -8,10 +8,12 @@
 
 #define MAX_LONG 20
 
-int main(){
+int main(void)
+{
 	
 	int opcionAcceso;
-	int InSesionExitoso = 0;	// Bandera para saber si podemos pasar al menú principal
+	// Bandera para saber si podemos pasar al menú principal
+	int InSesionExitoso = 0;	
 	char usuarioLogueado[MAX_LONG];
 	
 	int opcionMenu;
@@ -129,16 +131,21 @@ int main(){
 						ver_favoritos("favoritos.txt", usuarioLogueado);
 					}
 	                break;
+				
 				case 2:
-	                reservar_actividad(lista, n); // Llamada a la función
+					// Llamada a la función
+	                reservar_actividad(lista, n);
 	                break;
+				
 				case 3:
 	                //Mostramos al usuario la lista de centros 
 					printf("\nLista de centros disponibles:\n");
 					num_centros = mostrar_centros(lista, n, centros);
-					
-					ver_frecuencia(lista, n);     // Llamada a la función
+
+					// Llamada a la función
+					ver_frecuencia(lista, n);    
 					break;
+				
 				case 4:
 	                ver_graficas_centros(lista, n);	// Llamada a la función
 					break;case 5:
