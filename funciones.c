@@ -120,10 +120,12 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
     while ((c = fgetc(pf)) != EOF) 
 	{
 		// Al encontrar un salto de linea va sumando el número de líneas
-        if (c == '\n') { 
+        if (c == '\n') 
+		{ 
             (*n)++;
             
-            if (*n == 1) {
+            if (*n == 1) 
+			{
 				// La función ftell devuelve la posición actual. Justo después de la 1º línea
                 posicion = ftell(pf); 
             }
