@@ -83,7 +83,7 @@ void registrar_usuario(){
 }
 
 
-//FUNCIONES DEL MENÚ PRINCIPAL
+//FUNCIONES DE LECTURA Y DEL MENÚ PRINCIPAL
 
 AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n) {
 	//Devuelve un puntero a análisis
@@ -146,118 +146,6 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n) {
     printf("Fichero leido");
     return lista;
 }
-
-
-void ver_frecuencia(AnalisisDatos datos[], int n) {
-    
-    AnalisisDatos temp; 
-    char centroElegido[100];
-    int a = 0;
-    int b = 0;
-    float porcentaje;
-    int i,j;
-    
-    
-//1. VALIDAMOS EL CENTRO
-
-    do{
-	
-    	printf("Introduce el centro del que quieres ver la popularidad: ");
-        scanf(" %[^\n]", centroElegido);
-
-
-        //Vemos si existe el centro que ha introducido comparando con el fichero
-        for (i = 0; i < n; i++) {
-        
-            if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
-			    a++;
-            }
-        }
-    
-        //Si al final el contador "a" sigue en 0, es que el centro no existe o no tiene datos
-        if (a == 0) {
-            printf("No se han encontrado datos para el centro: %s\n", centroElegido);
-        }
-    
-    
-    }while (a == 0);
-    
-    
-//2. ORDENAMOS (Solo las actividades que coinciden con el centro elegido)
-
-    for (i = 0; i < n - 1; i++) {     //este bucle es el que recorre el vector
-        for (j = 0; j < n - i - 1; j++) {    //y este es el que va comparando
-               
-            float p1 = (float)datos[j].ocupadas / datos[j].plazas;
-            float p2 = (float)datos[j+1].ocupadas / datos[j+1].plazas;
-
-            if (p1 < p2) { // Ordenamos de mayor a menor popularidad SEGÚN EL PORCENTAJE
-                temp = datos[j];
-                datos[j] = datos[j + 1];
-                datos[j + 1] = temp;
-            }
-        }
-    }
-
-
-
-//3. IMPRIMIMOS LAS ACTIVIDADES PARA CADA CENTRO
-
-    printf("\n LO MAS POPULAR EN %s \n", centroElegido); 
-    printf("==========================================\n");
-     
-    for (i = 0; (i < n && b < 10); i++) {
-        
-        if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
-            
-            b++;
-            
-			porcentaje = ((float)datos[i].ocupadas / datos[i].plazas) * 100;
-
-            printf("%d. %s (%s - %s)\n", b, datos[i].actividad, datos[i].hora_inicial, datos[i].hora_final);
-            printf("   Ocupacion: %d de %d plazas (%.2f%%)\n", datos[i].ocupadas, datos[i].plazas, porcentaje);
-            printf("--------------------------------------------------\n");
-        }
-    }
-
-
-//4. DESCARGAR LOS DATOS 
-
-    FILE *archivo;
-    char respuesta;
-    int c = 0;
-    
-    printf("¿Desea descargar los datos?(s/n): ");
-    scanf(" %c", &respuesta);
-    
-    if (respuesta == 's'|| respuesta == 'S'){
-    	
-        archivo = fopen("Popularidad_actividades.txt", "w");	
-    	
-    	if (archivo != NULL){
-    		
-    		fprintf (archivo, "LO MAS POPULAR EN %s \n", centroElegido);
-    		fprintf(archivo, "==========================================\n");
-    		
-        	for (i = 0; (i < n && c < 10); i++) {
-                if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
-                    c++;
-			        porcentaje = ((float)datos[i].ocupadas / datos[i].plazas) * 100;
-                    
-					fprintf(archivo, "%d. %s (%s - %s)\n", c, datos[i].actividad, datos[i].hora_inicial, datos[i].hora_final);
-                    fprintf(archivo,"   Ocupacion: %d de %d plazas (%.2f%%)\n", datos[i].ocupadas, datos[i].plazas, porcentaje);
-                    fprintf(archivo,"--------------------------------------------------\n");
-                
-				}
-            }
-            
-            fclose(archivo);
-            printf("Archivo guardado con exito.\n");
-    		
-		}
-    		
-	}
-} //cerramos funcion
 
 
 Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos){
@@ -402,6 +290,226 @@ void mostrar_actividades_centro(const Centro *c){
         printf("---------------------------------\n");
     }
 }
+
+
+void reservar_actividad(AnalisisDatos lista[], int n){
+  	char centros[100][100];
+    char nombre_centro[100];
+
+    int num_centros;
+	
+	Centro Centro_usuario;
+	int opcion_centro;
+	int opcion_act;
+	int i;
+	int salir = 0;
+
+	//LLAMADA FUNCION 1
+	num_centros = mostrar_centros(lista, n, centros);
+	printf("\n-------Lista de centros -------\n");
+
+	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el número correcto
+	
+		
+		printf("Selecciona un numero del centro donde se quiere apuntar(1-%d): ", num_centros);
+		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posición, del centro.
+		
+	}while(opcion_centro<1 || opcion_centro>num_centros);
+	strcpy(nombre_centro, centros[opcion_centro - 1]);	 // En el 1 argumento le restamos 1, pq es una cadena	
+	
+	//LLAMADA FUNCION 2
+	Centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
+
+	printf("\n-------Lista de actividades por centro -------\n");
+	// imprimios la lista de actividades
+	for(i = 0; i<Centro_usuario.num_actividades; i++){ // El punto sirve para acceder a la estructura
+		printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso, ya que si introduce 1, la posición es 0
+    	Centro_usuario.lista_actividades[i].actividad,
+    	Centro_usuario.lista_actividades[i].hora_inicial,
+        Centro_usuario.lista_actividades[i].hora_final,
+   		Centro_usuario.lista_actividades[i].libres);
+		
+	}
+	//Selección de la  actividad q desea reservar
+	do{
+		printf("Selecciona un numero de la actividad a la que se quiere apuntar ", num_centros);
+		scanf("%i", &opcion_act);	
+	}while(opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
+	
+	opcion_act--;
+	
+	while(salir ==0){
+
+	//Ahora reservamos la actividad
+	if(Centro_usuario.lista_actividades[opcion_act].libres > 0){
+		for(i = 0; i<n; i++){
+			if(strcmp(lista[i].centro_deportivo, Centro_usuario.nombre)==0 && strcmp(lista[i].actividad,Centro_usuario.lista_actividades[opcion_act].actividad)==0
+			&& strcmp(lista[i].hora_inicial,Centro_usuario.lista_actividades[opcion_act].hora_inicial)== 0){
+				
+				lista[i].ocupadas++;
+                lista[i].libres--;
+                printf("RESERVA CONFIRMADA\n");
+                
+                salir = 1; 
+                
+                break;
+				
+			}
+		}
+	//En el caso q no haya plazas
+	}else{
+		int opcion;
+		int encontrada = 0;
+		printf("No hay plazas disponibles\n");
+		printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS DE LA ACTIVIDAD SELECCIONADA:\n");
+		
+		
+		for(i = 0; i<Centro_usuario.num_actividades; i++){
+			if(strcmp(Centro_usuario.lista_actividades[i].hora_inicial, Centro_usuario.lista_actividades[opcion_act].hora_inicial)==0
+			&&strcmp(Centro_usuario.lista_actividades[i].hora_final, Centro_usuario.lista_actividades[opcion_act].hora_final)==0
+			&& Centro_usuario.lista_actividades[i].libres>0 && i != opcion_act){ 
+				printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso
+		    	Centro_usuario.lista_actividades[i].actividad,
+		    	Centro_usuario.lista_actividades[i].hora_inicial,
+		        Centro_usuario.lista_actividades[i].hora_final,
+		   		Centro_usuario.lista_actividades[i].libres);
+				
+				encontrada = 1;
+				
+			}
+			
+		} 
+		if(encontrada ==0){
+			printf("NO quedan actividades a esa hora\n");
+		}
+		printf("1. Volver a intentar: \n");
+		printf("2. Salir: \n");
+	
+		scanf("%d", &opcion); 
+			if(opcion == 2){
+				salir = 1;
+			}else{
+				do{
+				printf("Selecciona otra actividad: ");
+           			scanf("%d", &opcion_act);
+				}while(opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
+				opcion_act--;
+			}
+		}		
+	}
+}
+
+
+void ver_frecuencia(AnalisisDatos datos[], int n) {
+    
+    AnalisisDatos temp; 
+    char centroElegido[100];
+    int a = 0;
+    int b = 0;
+    float porcentaje;
+    int i,j;
+    
+    
+	//1. VALIDAMOS EL CENTRO
+
+    do{
+	
+    	printf("Introduce el centro del que quieres ver la popularidad: ");
+        scanf(" %[^\n]", centroElegido);
+
+
+        //Vemos si existe el centro que ha introducido comparando con el fichero
+        for (i = 0; i < n; i++) {
+        
+            if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
+			    a++;
+            }
+        }
+    
+        //Si al final el contador "a" sigue en 0, es que el centro no existe o no tiene datos
+        if (a == 0) {
+            printf("No se han encontrado datos para el centro: %s\n", centroElegido);
+        }
+    
+    
+    }while (a == 0);
+    
+    
+	//2. ORDENAMOS (Solo las actividades que coinciden con el centro elegido)
+
+    for (i = 0; i < n - 1; i++) {     //este bucle es el que recorre el vector
+        for (j = 0; j < n - i - 1; j++) {    //y este es el que va comparando
+               
+            float p1 = (float)datos[j].ocupadas / datos[j].plazas;
+            float p2 = (float)datos[j+1].ocupadas / datos[j+1].plazas;
+
+            if (p1 < p2) { // Ordenamos de mayor a menor popularidad SEGÚN EL PORCENTAJE
+                temp = datos[j];
+                datos[j] = datos[j + 1];
+                datos[j + 1] = temp;
+            }
+        }
+    }
+
+
+
+	//3. IMPRIMIMOS LAS ACTIVIDADES PARA CADA CENTRO
+
+    printf("\n LO MAS POPULAR EN %s \n", centroElegido); 
+    printf("==========================================\n");
+     
+    for (i = 0; (i < n && b < 10); i++) {
+        
+        if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
+            
+            b++;
+            
+			porcentaje = ((float)datos[i].ocupadas / datos[i].plazas) * 100;
+
+            printf("%d. %s (%s - %s)\n", b, datos[i].actividad, datos[i].hora_inicial, datos[i].hora_final);
+            printf("   Ocupacion: %d de %d plazas (%.2f%%)\n", datos[i].ocupadas, datos[i].plazas, porcentaje);
+            printf("--------------------------------------------------\n");
+        }
+    }
+
+
+	//4. DESCARGAR LOS DATOS 
+
+    FILE *archivo;
+    char respuesta;
+    int c = 0;
+    
+    printf("¿Desea descargar los datos?(s/n): ");
+    scanf(" %c", &respuesta);
+    
+    if (respuesta == 's'|| respuesta == 'S'){
+    	
+        archivo = fopen("Popularidad_actividades.txt", "w");	
+    	
+    	if (archivo != NULL){
+    		
+    		fprintf (archivo, "LO MAS POPULAR EN %s \n", centroElegido);
+    		fprintf(archivo, "==========================================\n");
+    		
+        	for (i = 0; (i < n && c < 10); i++) {
+                if (strcmp(datos[i].centro_deportivo, centroElegido) == 0) {
+                    c++;
+			        porcentaje = ((float)datos[i].ocupadas / datos[i].plazas) * 100;
+                    
+					fprintf(archivo, "%d. %s (%s - %s)\n", c, datos[i].actividad, datos[i].hora_inicial, datos[i].hora_final);
+                    fprintf(archivo,"   Ocupacion: %d de %d plazas (%.2f%%)\n", datos[i].ocupadas, datos[i].plazas, porcentaje);
+                    fprintf(archivo,"--------------------------------------------------\n");
+                
+				}
+            }
+            
+            fclose(archivo);
+            printf("Archivo guardado con exito.\n");
+    		
+		}
+    		
+	}
+} //cerramos funcion
 
 
 void ver_graficas_centros(AnalisisDatos datos[], int n){
@@ -581,114 +689,6 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
     }
 
     FreeAllocations();
-}
-
-
-void reservar_actividad(AnalisisDatos lista[], int n){
-  	char centros[100][100];
-    char nombre_centro[100];
-
-    int num_centros;
-	
-	Centro Centro_usuario;
-	int opcion_centro;
-	int opcion_act;
-	int i;
-	int salir = 0;
-
-	//LLAMADA FUNCION 1
-	num_centros = mostrar_centros(lista, n, centros);
-	printf("\n-------Lista de centros -------\n");
-
-	do{ // Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el número correcto
-	
-		
-		printf("Selecciona un numero del centro donde se quiere apuntar(1-%d): ", num_centros);
-		scanf("%i", &opcion_centro); //Aqui el usuario introduce la posición, del centro.
-		
-	}while(opcion_centro<1 || opcion_centro>num_centros);
-	strcpy(nombre_centro, centros[opcion_centro - 1]);	 // En el 1 argumento le restamos 1, pq es una cadena	
-	
-	//LLAMADA FUNCION 2
-	Centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
-
-	printf("\n-------Lista de actividades por centro -------\n");
-	// imprimios la lista de actividades
-	for(i = 0; i<Centro_usuario.num_actividades; i++){ // El punto sirve para acceder a la estructura
-		printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso, ya que si introduce 1, la posición es 0
-    	Centro_usuario.lista_actividades[i].actividad,
-    	Centro_usuario.lista_actividades[i].hora_inicial,
-        Centro_usuario.lista_actividades[i].hora_final,
-   		Centro_usuario.lista_actividades[i].libres);
-		
-	}
-	//Selección de la  actividad q desea reservar
-	do{
-		printf("Selecciona un numero de la actividad a la que se quiere apuntar ", num_centros);
-		scanf("%i", &opcion_act);	
-	}while(opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
-	
-	opcion_act--;
-	
-	while(salir ==0){
-
-	//Ahora reservamos la actividad
-	if(Centro_usuario.lista_actividades[opcion_act].libres > 0){
-		for(i = 0; i<n; i++){
-			if(strcmp(lista[i].centro_deportivo, Centro_usuario.nombre)==0 && strcmp(lista[i].actividad,Centro_usuario.lista_actividades[opcion_act].actividad)==0
-			&& strcmp(lista[i].hora_inicial,Centro_usuario.lista_actividades[opcion_act].hora_inicial)== 0){
-				
-				lista[i].ocupadas++;
-                lista[i].libres--;
-                printf("RESERVA CONFIRMADA\n");
-                
-                salir = 1; 
-                
-                break;
-				
-			}
-		}
-	//En el caso q no haya plazas
-	}else{
-		int opcion;
-		int encontrada = 0;
-		printf("No hay plazas disponibles\n");
-		printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS DE LA ACTIVIDAD SELECCIONADA:\n");
-		
-		
-		for(i = 0; i<Centro_usuario.num_actividades; i++){
-			if(strcmp(Centro_usuario.lista_actividades[i].hora_inicial, Centro_usuario.lista_actividades[opcion_act].hora_inicial)==0
-			&&strcmp(Centro_usuario.lista_actividades[i].hora_final, Centro_usuario.lista_actividades[opcion_act].hora_final)==0
-			&& Centro_usuario.lista_actividades[i].libres>0 && i != opcion_act){ 
-				printf("%d. %s || %s - %s || Libres: %d\n", i + 1, // Se pone i + 1 pq el ususario ve eso
-		    	Centro_usuario.lista_actividades[i].actividad,
-		    	Centro_usuario.lista_actividades[i].hora_inicial,
-		        Centro_usuario.lista_actividades[i].hora_final,
-		   		Centro_usuario.lista_actividades[i].libres);
-				
-				encontrada = 1;
-				
-			}
-			
-		} 
-		if(encontrada ==0){
-			printf("NO quedan actividades a esa hora\n");
-		}
-		printf("1. Volver a intentar: \n");
-		printf("2. Salir: \n");
-	
-		scanf("%d", &opcion); 
-			if(opcion == 2){
-				salir = 1;
-			}else{
-				do{
-				printf("Selecciona otra actividad: ");
-           			scanf("%d", &opcion_act);
-				}while(opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
-				opcion_act--;
-			}
-		}		
-	}
 }
 
 
