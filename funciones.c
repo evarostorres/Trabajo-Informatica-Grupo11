@@ -11,16 +11,44 @@
 
 // FUNCIONES DEL MENU DE ACCESO
 
+void registrar_usuario() 
+{
+    char nuevoUsuario[MAX_LONG];
+    char nuevaContrasena[MAX_LONG];
+    FILE *fichUsuariosContrasenas;
+
+	// "a" abre para añadir datos al final del fichero
+    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a"); 
+    if (fichUsuariosContrasenas == NULL) 
+	{
+        printf("Error al abrir el archivo de contraseñas.\n");
+        return;
+    }
+
+    printf("\n--- REGISTRO DE NUEVO USUARIO ---\n");
+    printf("Introduce nombre de usuario: ");
+    scanf("%s", nuevoUsuario);
+	
+    printf("Introduce contrasena: ");
+    scanf("%s", nuevaContrasena);
+
+    // Guardamos el usuario y la contraseña separados por un espacio
+    fprintf(fichUsuariosContrasenas, "%s %s\n", nuevoUsuario, nuevaContrasena);
+    fclose(fichUsuariosContrasenas);
+
+    printf("¡Registro completado con exito! Ya puedes iniciar sesion\n");
+}
+
+
 int iniciar_sesion(char *guardarUsuario)
 {
-	
     char usuarioPedido[MAX_LONG];
     char contrasenaPedida[MAX_LONG];
     char usuarioCorrecto[MAX_LONG];
     char contrasenaCorrecta[MAX_LONG];
     FILE *fichUsuariosContrasenas;
 
-    printf("\n--- INICIO DE SESIÓN ---\n");
+    printf("\n--- INICIO DE SESION ---\n");
     printf("Usuario: ");
     scanf("%s", usuarioPedido);
     printf("Contrasena: ");
@@ -30,8 +58,9 @@ int iniciar_sesion(char *guardarUsuario)
     fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "r");
     if (fichUsuariosContrasenas == NULL) 
 	{
-        printf("\nError: No se pudo abrir el archivo de credenciales.\n");
-        // Salimos de la función si no hay archivo
+        printf("\nError: No tiene usuario o no se pudo abrir el archivo de credenciales.");
+        printf("\nIntente de nuevo.\n");
+		// Salimos de la función si no hay archivo
 		return 0; 	
     }
 
@@ -55,7 +84,7 @@ int iniciar_sesion(char *guardarUsuario)
 	
     if (encontrarCoincidencia) 
 	{
-        printf("\nAcceso correcto. ¡Bienvenido al sistema!\n");
+        printf("\nAcceso correcto. Bienvenido al sistema!\n");
 		// Señal de éxito para la función main
         return 1; 	
     } 
@@ -67,34 +96,6 @@ int iniciar_sesion(char *guardarUsuario)
     }
 }
 
-
-void registrar_usuario() 
-{
-    char nuevoUsuario[MAX_LONG];
-    char nuevaContrasena[MAX_LONG];
-    FILE *fichUsuariosContrasenas;
-
-	// "a" abre para añadir datos al final del fichero
-    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a"); 
-    if (fichUsuariosContrasenas == NULL) 
-	{
-        printf("Error al abrir el archivo.\n");
-        return;
-    }
-
-    printf("\n--- REGISTRO DE NUEVO USUARIO ---\n");
-    printf("Introduce nombre de usuario: ");
-    scanf("%s", nuevoUsuario);
-	
-    printf("Introduce contraseña: ");
-    scanf("%s", nuevaContrasena);
-
-    // Guardamos el usuario y la contraseña separados por un espacio
-    fprintf(fichUsuariosContrasenas, "%s %s\n", nuevoUsuario, nuevaContrasena);
-    fclose(fichUsuariosContrasenas);
-
-    printf("¡Registro completado con éxito! Ya puedes iniciar sesión\n");
-}
 
 // FUNCIONES DE LECTURA Y DEL MENÚ PRINCIPAL
 
@@ -111,7 +112,7 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
     pf = fopen(nombrearchivo, "r");
     if (pf == NULL)
 	{
-        printf("Error al abrir el archivo %s\n", nombrearchivo);
+        printf("Error al abrir el archivo de datos %s\n", nombrearchivo);
 		// Que devuelva NULL significa q devuelve error
         return NULL;
     }
@@ -171,14 +172,12 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
 	Esto apunta al main */
     *n = total_lineas; 
     fclose(pf); 
-    printf("Fichero leido");
     return lista;
 }
 
 
 Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos)
 {
-	
 	Centro c;
     int i;
     int contador = 0;
@@ -266,7 +265,6 @@ int mostrar_centros(AnalisisDatos *datos, int num_datos, char centros[][100])
 
 void mostrar_actividades_centro(const Centro *c)
 {
-	
     int i;
 
 	// Comprueba que se ha elegido una opción válida
@@ -277,7 +275,8 @@ void mostrar_actividades_centro(const Centro *c)
     }
 
 	// Imprime el nombre del centro seleccionado
-    printf("Centro deportivo: %s\n", c->nombre);
+    printf("\nCentro deportivo: %s\n", c->nombre);
+    printf("---------------------------------\n");
     printf("---------------------------------\n");
 
 	// Si el centro no tiene actividades
@@ -333,7 +332,7 @@ void mostrar_actividades_centro(const Centro *c)
 
 void reservar_actividad(AnalisisDatos lista[], int n)
 {
-  	char centros[100][100];
+	char centros[100][100];
     char nombre_centro[100];
 
     int num_centros;
@@ -345,14 +344,15 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 	int salir = 0;
 
 	// LLAMADA FUNCION 1
+	printf("\n------ Lista de centros ------\n");
+	printf("--------------------------------\n");
 	num_centros = mostrar_centros(lista, n, centros);
-	printf("\n-------Lista de centros -------\n");
 
 	// Este do while sirve para q lo vuelva a pedir hasta q el usuario introduzca el número correcto
 	do
 	{ 
 		
-		printf("Selecciona un numero del centro donde se quiere apuntar(1-%d): ", num_centros);
+		printf("\nSeleccione el numero del centro al que se quiere apuntar: ");
 		//Aqui el usuario introduce la posición, del centro.
 		scanf("%i", &opcion_centro); 
 		
@@ -381,7 +381,7 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 	// Selección de la  actividad q desea reservar
 	do
 	{
-		printf("Selecciona un numero de la actividad a la que se quiere apuntar ", num_centros);
+		printf("\nSeleccione el numero de la actividad a la que se quiere apuntar: ");
 		scanf("%i", &opcion_act);	
 	}
 		while (opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
@@ -403,7 +403,7 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 					
 					lista[i].ocupadas++;
 	                lista[i].libres--;
-	                printf("RESERVA CONFIRMADA\n");
+	                printf("\nRESERVA CONFIRMADA\n");
 	                
 	                salir = 1; 
 	                break;
@@ -418,8 +418,8 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 			int opcion;
 			int encontrada = 0;
 			
-			printf("No hay plazas disponibles\n");
-			printf("SUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS DE LA ACTIVIDAD SELECCIONADA:\n");
+			printf("\nNo hay plazas disponibles\n");
+			printf("\nSUGERENCIAS DENTRO DEL CENTRO CON LOS MISMOS HORARIOS DE LA ACTIVIDAD SELECCIONADA:\n");
 			
 			
 			for (i = 0; i<Centro_usuario.num_actividades; i++)
@@ -445,32 +445,32 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 				printf("NO quedan actividades a esa hora\n");
 			}
 			
-			printf("1. Volver a intentar: \n");
-			printf("2. Salir: \n");
+			printf("\n1. Volver a intentar reserva\n");
+			printf("2. Salir de reserva \n");
+			printf("Seleccione una opcion: ");
 			scanf("%d", &opcion); 
 			
-				if (opcion == 2)
+			if (opcion == 2)
+			{
+				salir = 1;
+			}
+			else
+			{
+				do
 				{
-					salir = 1;
+					printf("Seleccione otra actividad: ");
+           			scanf("%d", &opcion_act);
 				}
-				else
-				{
-					do
-					{
-						printf("Selecciona otra actividad: ");
-	           			scanf("%d", &opcion_act);
-					}
-					while (opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
-					opcion_act--;
-				}
-			}		
+				while (opcion_act < 1 || opcion_act > Centro_usuario.num_actividades);
+				opcion_act--;
+			}
+		}		
 	}
 }
 
 
 void ver_frecuencia(AnalisisDatos datos[], int n) 
 {
-    
     AnalisisDatos temp; 
     char centroElegido[100];
     int a = 0;
@@ -478,15 +478,12 @@ void ver_frecuencia(AnalisisDatos datos[], int n)
     float porcentaje;
     int i,j;
     
-    
 	// 1. VALIDAMOS EL CENTRO
 	
     do
 	{
-	
-    	printf("Introduce el centro del que quieres ver la popularidad: ");
+    	printf("\nIntroduzca el NOMBRE del centro (tal y como sale en la lista) para ver su popularidad: ");
         scanf(" %[^\n]", centroElegido);
-
 
         // Vemos si existe el centro que ha introducido comparando con el fichero
         for (i = 0; i < n; i++) 
@@ -503,11 +500,8 @@ void ver_frecuencia(AnalisisDatos datos[], int n)
 		{
             printf("No se han encontrado datos para el centro: %s\n", centroElegido);
         }
-    
-    
     }
 	while (a == 0);
-    
     
 	// 2. ORDENAMOS (Solo las actividades que coinciden con el centro elegido)
 	
@@ -530,10 +524,8 @@ void ver_frecuencia(AnalisisDatos datos[], int n)
         }
     }
 
-
-
-	// 3. IMPRIMIMOS LAS ACTIVIDADES PARA CADA CENTRO 
-	
+	// 3. IMPRIMIMOS LAS ACTIVIDADES PARA CADA CENTRO
+	 
     printf("\n LO MAS POPULAR EN %s \n", centroElegido); 
     printf("==========================================\n");
      
@@ -553,14 +545,13 @@ void ver_frecuencia(AnalisisDatos datos[], int n)
         }
     }
 
-
 	//4. DESCARGAR LOS DATOS 
-
+	
     FILE *archivo;
     char respuesta;
     int c = 0;
     
-    printf("¿Desea descargar los datos?(s/n): ");
+    printf("\nDesea descargar los datos? (s/n): ");
     scanf(" %c", &respuesta);
     
     if (respuesta == 's'|| respuesta == 'S')
@@ -588,16 +579,14 @@ void ver_frecuencia(AnalisisDatos datos[], int n)
             }
             
             fclose(archivo);
-            printf("Archivo guardado con exito.\n");
-    		
-		}
-    		
+            printf("\nArchivo guardado con exito.\n");
+		}		
 	}
 } 
 
 
-void ver_graficas_centros(AnalisisDatos datos[], int n){
-
+void ver_graficas_centros(AnalisisDatos datos[], int n)
+{
     // Variables arriba (compatible con Dev-C++ C90) 
     AnalisisDatos aux;
     int i, j, k;
@@ -623,11 +612,8 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
 
     ByteArray *pngdata;
 
-
-    /* ================================================= */
-    /* 1. ORDENAR CENTROS ALFABÉTICAMENTE                */
-    /* ================================================= */
-
+    // 1. ORDENAR CENTROS ALFABÉTICAMENTE
+    
     for (i = 0; i < n - 1; i++)
 	{
         for (j = 0; j < n - i - 1; j++)
@@ -641,11 +627,8 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
         }
     }
 
-
-    /* ================================================= */
-    /* 2. CALCULAR MEDIA DE OCUPACIÓN                    */
-    /* ================================================= */
-
+    // 2. CALCULAR MEDIA DE OCUPACIÓN
+    
     numCentros = 0;
 
     for (i = 0; i < n; i++)
@@ -685,11 +668,8 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
         }
     }
 
-
-    /* ================================================= */
-    /* 3. CREAR GRÁFICA                                 */
-    /* ================================================= */
-
+    // 3. CREAR GRÁFICA
+    
     StartArenaAllocator();
 
     imageRef = CreateRGBABitmapImageReference();
@@ -735,28 +715,24 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
     settings->scatterPlotSeriesLength = 1;
 
 
-    /* Dibujar */
+    // Dibujar
     success = DrawScatterPlotFromSettings(imageRef, settings, errorMessage);
 
-
-    /* ================================================= */
-    /* 4. GUARDAR PNG                                   */
-    /* ================================================= */
-
-
+    // 4. GUARDAR PNG
+    
     if (success)
 	{
         pngdata = ConvertToPNG(imageRef->image);
 
         WriteToFile(pngdata,"analisisOcupacion.png");
 
-        printf("\nGrafica generada con exito.\n");
+        printf("\nGRAFICA GENERADA CON EXITO\n");
         printf("Archivo: analisisOcupacion.png\n");
 
 
         /* LEYENDA */
 
-        printf("\n----- LEYENDA -----\n");
+        printf("\n----- LEYENDA DE LA GRAFICA -----\n");
 
         contadorLeyenda = 1;
 
@@ -786,7 +762,6 @@ void ver_graficas_centros(AnalisisDatos datos[], int n){
 
 void anadir_favorito(const char *nombreFichFav, const char *usuarioLogueado, const Centro *c)
 {
-	
 	if (c == NULL || c->num_actividades == 0)
     {
         printf("No hay actividades para anadir a favoritos.\n");
@@ -796,7 +771,8 @@ void anadir_favorito(const char *nombreFichFav, const char *usuarioLogueado, con
     int opcion;
 
     // Mostrar actividades numeradas
-    printf("\nElige una actividad para anadir a favoritos:\n");
+    printf("\nElija una actividad para anadir a favoritos:\n");
+    printf("----------------------------------------------\n");
 	
     for (int i = 0; i < c->num_actividades; i++)
     {
@@ -804,7 +780,7 @@ void anadir_favorito(const char *nombreFichFav, const char *usuarioLogueado, con
 			c->lista_actividades[i].hora_inicial, c->lista_actividades[i].hora_final);
     }
 
-    printf("Indica el número de la actividad (0 para cancelar): ");
+    printf("\nIndique el numero de la actividad (0 para cancelar): ");
     scanf("%d", &opcion);
 
     if (opcion <= 0 || opcion > c->num_actividades)
@@ -826,7 +802,7 @@ void anadir_favorito(const char *nombreFichFav, const char *usuarioLogueado, con
 
     fclose(f);
 
-    printf("Actividad anadida a favoritos correctamente.\n");
+    printf("\nActividad anadida a favoritos correctamente.\n");
 }
 
 
@@ -846,7 +822,7 @@ void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado)
     char u[20], c[50], a[50];	
 
 
-    printf("\n--- TUS FAVORITOS ---\n");
+    printf("\n--- SUS FAVORITOS ---\n");
 
     // Se leen los tres elementos separados por ; y se meten en el vector de estructuras
     while (fscanf(archivo, "%19[^;];%49[^;];%49[^\n]\n", u, c, a) == 3) 
@@ -867,14 +843,14 @@ void ver_favoritos(const char *nombreFichFav, const char *usuarioLogueado)
     // Si el contador es 0 quiere decir que el usuario no aparece en el archivo (no tiene favoritos)
 	if (contador == 0) 
 	{
-        printf("No tienes ninguna actividad en favoritos.\n");
+        printf("No tiene ninguna actividad en favoritos.\n");
         return;
     }
 
     // El usuario selecciona si quiere gestionar alguna actividad
 	int seleccion;
 	
-    printf("\nSi desea eliminar una actividad seleccionela (indica su número) o pulse 0 para salir: ");
+    printf("\nSi desea eliminar una actividad de favoritos seleccionela (indica su numero) o pulse 0 para salir: ");
     scanf("%d", &seleccion);
 
 	if (seleccion > 0 && seleccion <= contador) 
@@ -889,7 +865,7 @@ void eliminar_favorito(Favorito fav, const char *nombreFichFav, const char *usua
 {
     char opcion;
 	
-    printf("\n ¿Seguro que desea borrar %s de favoritos? (s/n): ", fav.actividad);
+    printf("\nSeguro que desea borrar %s de favoritos? (s/n): ", fav.actividad);
     scanf(" %c", &opcion);
 
     if (opcion == 's' || opcion == 'S') 
@@ -917,6 +893,6 @@ void eliminar_favorito(Favorito fav, const char *nombreFichFav, const char *usua
         remove(nombreFichFav);	
         // Renombra el archivo temporal para que tenga el nombre del original (con el favorito quitado)
         rename("temp.txt", nombreFichFav);	
-        printf("Favorito eliminado correctamente.\n");
+        printf("\nFavorito eliminado correctamente.\n");
     }
 }
