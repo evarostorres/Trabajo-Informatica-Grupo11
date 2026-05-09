@@ -105,29 +105,37 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
     long int posicion = 0;
     AnalisisDatos *lista = NULL;
 
-	//ABRIMOS EL ARCHIVO
+	// Abrimos el archivo
     pf = fopen(nombrearchivo, "r");
-    if (pf == NULL) {
+    if (pf == NULL)
+	{
         printf("Error al abrir el archivo %s\n", nombrearchivo);
-        return NULL;//Que devuelva NULL significa q devuelve error
+		// Que devuelva NULL significa q devuelve error
+        return NULL;
     }
 
     *n = 0;
-    //CUENTA LAS LÍNEAS DEL FICHERO HASTA EL FINAL
-    while ((c = fgetc(pf)) != EOF) {
-        if (c == '\n') { //al encontrar un salto de linea va sumando el número de líneas
+    // Cuenta las líneas del fichero hasta el final
+    while ((c = fgetc(pf)) != EOF) 
+	{
+		// Al encontrar un salto de linea va sumando el número de líneas
+        if (c == '\n') { 
             (*n)++;
             
             if (*n == 1) {
-                posicion = ftell(pf); //la función ftell devuelve la posición actual. Justo después de la 1º línea
+				// La función ftell devuelve la posición actual. Justo después de la 1º línea
+                posicion = ftell(pf); 
             }
         }
     }
 
-    // 1.Si el archivo tiene datos, saltamos la línea de títulos
-    if (*n > 1) {
+    // Si el archivo tiene datos, saltamos la línea de títulos
+    if (*n > 1) 
+	{
         fseek(pf, posicion, SEEK_SET);
-    } else {
+    } 
+	else
+	{
         fclose(pf);
         return NULL;
     }
@@ -135,14 +143,16 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
     int total_lineas = (*n) - 1;
     lista = (AnalisisDatos *)malloc(total_lineas * sizeof(AnalisisDatos));
     
-    if (lista == NULL) {
+    if (lista == NULL) 
+	{
         printf("Error de memoria\n");
         fclose(pf);
         return NULL;
     }
 
-    // 2. Leer los datos uno por uno sin contar la linea de títulos
-    for (i = 0; i < total_lineas; i++) {
+    // Lee los datos uno por uno sin contar la linea de títulos
+    for (i = 0; i < total_lineas; i++) 
+	{
         // fscanf leerá cada campo separado por espacios
         fscanf(pf, "%d %d %d %49s %19s %19s %99s %49s %99s %d %d %d %49s",
                &lista[i].ano, &lista[i].mes, &lista[i].dia,
@@ -153,7 +163,9 @@ AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n)
            
     }
 
-    *n = total_lineas; // Ejemplo: ahora n pasa de ser 30 lineas, a ser total_lineas (que hemos dicho que son 29 lineas). Esto apunta a el main.
+	/* Ejemplo: ahora n pasa de ser 30 lineas a ser total_lineas (que hemos dicho que son 29 lineas)
+	Esto apunta al main */
+    *n = total_lineas; 
     fclose(pf); 
     printf("Fichero leido");
     return lista;
@@ -166,10 +178,10 @@ Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num
     int i;
     int contador = 0;
 
-    //Copiar el nombre del centro
+    // Copiar el nombre del centro
     strcpy(c.nombre, nombre);
 
-    //Primero contamos actividades
+    // Primero contamos actividades
     for (i = 0; i < num_datos; i++)
     {
         if (strcmp(datos[i].centro_deportivo, nombre) == 0)
@@ -180,10 +192,10 @@ Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num
 
     c.num_actividades = contador;
 
-    //Reservamos memoria para las actividades del centro
+    // Reservamos memoria para las actividades del centro
     c.lista_actividades = malloc(contador * sizeof(AnalisisDatos));
 
-	//Comprobación de que se ha reservado bien la memoria
+	// Comprobación de que se ha reservado bien la memoria
 	if (c.lista_actividades == NULL)
 	{
 	    printf("Error de memoria\n");
@@ -191,7 +203,7 @@ Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num
 	    return c;
 	}
 		
-    //Después copiamos las actividades
+    // Después copiamos las actividades
     int indice = 0;
     for (i = 0; i < num_datos; i++)
     {
@@ -208,35 +220,35 @@ Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num
 
 int mostrar_centros(AnalisisDatos *datos, int num_datos, char centros[][100])
 {
-    //contador de centros
+    // Contador de centros
 	int num_centros = 0;
     
 	int i, j;
 	
-	//Recorremos la base de datos
+	// Recorremos la base de datos
     for ( i = 0; i < num_datos; i++)
     {
     	
-		//variable bandera inicializada como falso, centro no repetido
+		// Variable bandera inicializada como falso, centro no repetido
     	int repetido = 0;
     	
         for (int j = 0; j < num_centros; j++)
         {
-        	//Comprobamos si ya existe el centro de la base de datos en el vectos lista de centros
+        	// Comprobamos si ya existe el centro de la base de datos en el vectos lista de centros
             if (strcmp(centros[j], datos[i].centro_deportivo) == 0)
             {
-            	//Si está repetido la bandera toma el valor verdadero
+            	// Si está repetido la bandera toma el valor verdadero
                 repetido = 1;
-                //Salimos del bucle, ya hemos encontrado centro repetido
+                // Salimos del bucle, ya hemos encontrado centro repetido
                 break;
             }
         }
 
-        /*Si repetido entra con valor verdadero (centro repetido) entonces no se ejecuta el "if", 
+        /* Si repetido entra con valor verdadero (centro repetido) entonces no se ejecuta el "if", 
 		pero si entra con valor falso (centro no repetido) se ejecuta */
         if (!repetido)
         {
-        	//Copiamos el centro en nuestro vector lista de centros
+        	// Copiamos el centro en nuestro vector lista de centros
             strcpy(centros[num_centros], datos[i].centro_deportivo);
 
             printf("%d. %s\n", num_centros + 1, centros[num_centros]);
