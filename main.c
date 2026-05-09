@@ -42,11 +42,13 @@ int main(void)
 				// Si la función devuelve 1, se ha iniciado sesión y forzamos salida del bucle
                 if (iniciar_sesion(usuarioLogueado) == 1) {
                     InSesionExitoso = 1;
-                    opcionAcceso = 3; // Forzamos que la condición del while sea falsa
+					// Forzamos que la condición del while sea falsa
+                    opcionAcceso = 3; 
                 }
                 break;
             case 2: 
-				registrar_usuario(); 	// Llamada a la función
+				// Llamada a la función
+				registrar_usuario(); 	
 				break;
             case 3: 
 				printf("Saliendo del programa...\n"); 
@@ -60,7 +62,8 @@ int main(void)
     int n = 0;
     AnalisisDatos *lista = NULL;
 
-    lista = lectura_fichero("dataset.csv", &n);		//Función lectura fichero de datos
+	//Función lectura fichero de datos
+    lista = lectura_fichero("dataset.csv", &n);		
 
     if (lista == NULL) {
         printf("Error: No se pudo cargar el archivo o la memoria.\n");
@@ -147,19 +150,25 @@ int main(void)
 					break;
 				
 				case 4:
-	                ver_graficas_centros(lista, n);	// Llamada a la función
-					break;case 5:
-	                ver_favoritos("favoritos.txt", usuarioLogueado);	// Llamada a la función
+					// Llamada a la función
+	                ver_graficas_centros(lista, n);
+					break;
+				
+				case 5:
+					// Llamada a la función
+	                ver_favoritos("favoritos.txt", usuarioLogueado);	
 	                break;
+				
 	            case 0:
 	                printf("Saliendo del programa. ¡Adios!\n");
 	                break;
+				
 	            default:
 	                printf("Opcion no valida. Vuelve a intentarlo.\n");
 	        }
-			
-	    } while (opcionMenu != 0); // El bucle se repite mientras no se pulse 0
-	
+		// El bucle se repite mientras no se pulse 0	
+	    } while (opcionMenu != 0); 
+		
 	    return 0;
 	}
 	
