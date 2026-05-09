@@ -9,9 +9,10 @@
 #define MAX_LONG 20
 
 
-//FUNCIONES DEL MENU DE ACCESO
+// FUNCIONES DEL MENU DE ACCESO
 
-int iniciar_sesion(char *guardarUsuario){
+int iniciar_sesion(char *guardarUsuario)
+{
 	
     char usuarioPedido[MAX_LONG];
     char contrasenaPedida[MAX_LONG];
@@ -27,47 +28,57 @@ int iniciar_sesion(char *guardarUsuario){
 
 	// Abrimos el archivo para buscar la coincidencia
     fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "r");
-    if (fichUsuariosContrasenas == NULL) {
+    if (fichUsuariosContrasenas == NULL) 
+	{
         printf("\nError: No se pudo abrir el archivo de credenciales.\n");
-        return 0; 	// Salimos de la función si no hay archivo
+        // Salimos de la función si no hay archivo
+		return 0; 	
     }
 
 	// Reiniciamos la bandera de búsqueda en cada intento
     int encontrarCoincidencia = 0;
     
     // Leemos el fichero (pares usuario-contraseña separados por espacio) hasta el final (EOF)
-    while (fscanf(fichUsuariosContrasenas, "%s %s", usuarioCorrecto, contrasenaCorrecta) != EOF) {
+    while (fscanf(fichUsuariosContrasenas, "%s %s", usuarioCorrecto, contrasenaCorrecta) != EOF) 
+	{
         // Comprobamos si coinciden ambos
-		if (strcmp(usuarioPedido, usuarioCorrecto) == 0 && strcmp(contrasenaPedida, contrasenaCorrecta) == 0){
+		if (strcmp(usuarioPedido, usuarioCorrecto) == 0 && strcmp(contrasenaPedida, contrasenaCorrecta) == 0)
+		{
             encontrarCoincidencia = 1;
             strcpy(guardarUsuario, usuarioPedido);
-            break; // Salimos del while de lectura al ver que coinciden
+			// Salimos del while de lectura al ver que coinciden
+            break; 
         }
     }
-
-    fclose(fichUsuariosContrasenas); // Cerramos el archivo tras buscar
-
-    if (encontrarCoincidencia) {
+	 // Cerramos el archivo tras buscar
+    fclose(fichUsuariosContrasenas); 
+	
+    if (encontrarCoincidencia) 
+	{
         printf("\nAcceso correcto. ¡Bienvenido al sistema!\n");
-        return 1; 	// Señal de éxito para la función main
-    } else {
+		// Señal de éxito para la función main
+        return 1; 	
+    } 
+	else
+	{
         printf("\nUsuario o contrasena incorrectos. Intentalo de nuevo.\n");
-        return 0; 	// Señal de fallo
+		// Señal de fallo
+        return 0; 
     }
 }
 
 
-void registrar_usuario(){
+void registrar_usuario()
+{
 	
     char nuevoUsuario[MAX_LONG];
     char nuevaContrasena[MAX_LONG];
     FILE *fichUsuariosContrasenas;
 
-    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a"); // "a" abre para añadir datos al final del fichero
-    if (fichUsuariosContrasenas == NULL) {
+	// "a" abre para añadir datos al final del fichero
+    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a");
         printf("Error al abrir el archivo.\n");
         return;
-    }
 
     printf("\n--- REGISTRO DE NUEVO USUARIO ---\n");
     printf("Introduce nombre de usuario: ");
@@ -83,10 +94,11 @@ void registrar_usuario(){
 }
 
 
-//FUNCIONES DE LECTURA Y DEL MENÚ PRINCIPAL
+// FUNCIONES DE LECTURA Y DEL MENÚ PRINCIPAL
 
-AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n) {
-	//Devuelve un puntero a análisis
+AnalisisDatos *lectura_fichero(const char* nombrearchivo, int* n) 
+{
+	// Devuelve un puntero a análisis
     int i;
     char c;
     FILE *pf;
