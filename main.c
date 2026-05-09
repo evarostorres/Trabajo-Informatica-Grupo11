@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
+
 #include "pbPlots.h"
 #include "supportLib.h"
+#include "estructurasPrototipos.h" 
 
 #define MAX_LONG 20
 
