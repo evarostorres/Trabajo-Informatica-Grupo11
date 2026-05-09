@@ -8,12 +8,10 @@
 
 #define MAX_LONG 20
 
-int main(void)
+int main()
 {
-	
 	int opcionAcceso;
-	// Bandera para saber si podemos pasar al menú principal
-	int InSesionExitoso = 0;	
+	int InSesionExitoso = 0;	// Bandera para saber si podemos pasar al menú principal
 	char usuarioLogueado[MAX_LONG];
 	
 	int opcionMenu;
@@ -40,7 +38,8 @@ int main(void)
         switch (opcionAcceso) {
             case 1: 
 				// Si la función devuelve 1, se ha iniciado sesión y forzamos salida del bucle
-                if (iniciar_sesion(usuarioLogueado) == 1) {
+                if (iniciar_sesion(usuarioLogueado) == 1)
+				{
                     InSesionExitoso = 1;
 					// Forzamos que la condición del while sea falsa
                     opcionAcceso = 3; 
@@ -62,42 +61,46 @@ int main(void)
     int n = 0;
     AnalisisDatos *lista = NULL;
 
-	//Función lectura fichero de datos
+	//Función de lectura del fichero de datos
     lista = lectura_fichero("dataset.csv", &n);		
 
-    if (lista == NULL) {
+    if (lista == NULL) 
+	{
         printf("Error: No se pudo cargar el archivo o la memoria.\n");
         return -1;
     }
     
-    if (InSesionExitoso) {
+    if (InSesionExitoso)
+	{
 		// Menú principal con bucle y switch (sistema de gestión)
 	    do {
 	        printf("\n==============================================");
 			printf("\n SISTEMA DE GESTION DE ACTIVIDADES DEPORTIVAS ");
 			printf("\n==============================================\n");
-	        printf("1. Listado de actividades\n");
+	        printf("1. Listado de actividades por centro\n");
 	        printf("2. Reservar actividad\n");
 	        printf("3. Ver popularidad/frecuencia por centro\n");
-	        printf("4. Ver gráfica de popularidad de los centros\n");
+	        printf("4. Ver grafica de popularidad de los centros\n");
 	        printf("5. Favoritos\n");
 	        printf("0. Salir\n");
 	        printf("\nSeleccione una opcion: ");
 	        
 	        scanf("%d", &opcionMenu);
 	        
-			switch (opcionMenu) {
+			switch(opcionMenu) 
+			{
 				case 1:
 					//Crear estructura Centro a partir de los datos
 				    centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 				
 					//Mostramos al usuario la lista de centros 
 					printf("\nLista de centros disponibles:\n");
+					printf("-------------------------------\n");
 					
 					num_centros = mostrar_centros(lista, n, centros);
 					
 					
-					printf("\nElige un centro (numero): ");
+					printf("\nElija un centro (numero) para ver sus actividades: ");
 					scanf(" %d", &opcion);
 				
 					
@@ -117,21 +120,22 @@ int main(void)
 				    //Mostrar actividades
 				    mostrar_actividades_centro(&centro_usuario);
 					
+					//Opcion de añadir a favoritos
 					char opcionAnadirFav;
-					printf("\nQuieres anadir alguna actividad a favoritos? (s/n): ");
+					printf("\nQuiere anadir alguna actividad a favoritos? (s/n): ");
 					scanf(" %c", &opcionAnadirFav);
 					
 					if (opcionAnadirFav == 's' || opcionAnadirFav == 'S')
 					{
 					    anadir_favorito("favoritos.txt", usuarioLogueado, &centro_usuario);
-					}
-					
-					//Opción de ver favoritos (si existan o no)
-					char opcionVerFav;
-					printf("\nQuieres ver tus favoritos? (s/n): ");
-					scanf(" %c", &opcionVerFav);
-					if (opcionVerFav == 's' || opcionVerFav == 'S'){
-						ver_favoritos("favoritos.txt", usuarioLogueado);
+					    
+						//Opción de ver favoritos (si existan o no)
+						char opcionVerFav;
+						printf("\nQuiere ver sus favoritos? (s/n): ");
+						scanf(" %c", &opcionVerFav);
+						if (opcionVerFav == 's' || opcionVerFav == 'S'){
+							ver_favoritos("favoritos.txt", usuarioLogueado);
+						}
 					}
 	                break;
 				
@@ -143,6 +147,7 @@ int main(void)
 				case 3:
 	                //Mostramos al usuario la lista de centros 
 					printf("\nLista de centros disponibles:\n");
+					printf("-------------------------------\n");
 					num_centros = mostrar_centros(lista, n, centros);
 
 					// Llamada a la función
