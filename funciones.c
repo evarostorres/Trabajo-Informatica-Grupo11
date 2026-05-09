@@ -85,6 +85,7 @@ void registrar_usuario()
     printf("\n--- REGISTRO DE NUEVO USUARIO ---\n");
     printf("Introduce nombre de usuario: ");
     scanf("%s", nuevoUsuario);
+	
     printf("Introduce contraseña: ");
     scanf("%s", nuevaContrasena);
 
