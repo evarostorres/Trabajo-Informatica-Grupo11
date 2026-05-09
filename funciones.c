@@ -68,17 +68,19 @@ int iniciar_sesion(char *guardarUsuario)
 }
 
 
-void registrar_usuario()
+void registrar_usuario() 
 {
-	
     char nuevoUsuario[MAX_LONG];
     char nuevaContrasena[MAX_LONG];
     FILE *fichUsuariosContrasenas;
 
 	// "a" abre para añadir datos al final del fichero
-    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a");
+    fichUsuariosContrasenas = fopen("usuarioscontrasenas.txt", "a"); 
+    if (fichUsuariosContrasenas == NULL) 
+	{
         printf("Error al abrir el archivo.\n");
         return;
+    }
 
     printf("\n--- REGISTRO DE NUEVO USUARIO ---\n");
     printf("Introduce nombre de usuario: ");
@@ -92,7 +94,6 @@ void registrar_usuario()
 
     printf("¡Registro completado con éxito! Ya puedes iniciar sesión\n");
 }
-
 
 // FUNCIONES DE LECTURA Y DEL MENÚ PRINCIPAL
 
