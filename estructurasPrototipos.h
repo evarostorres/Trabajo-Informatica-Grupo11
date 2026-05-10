@@ -25,8 +25,8 @@ typedef struct {
 } Centro;
 
 
-/*Las dos siguientes estructuras son muy parecidas porque 
-en una función se ha trabajado con memoria dinamica y en otra no*/
+/* Las dos siguientes estructuras son muy parecidas porque 
+en una función se ha trabajado con memoria dinamica y en otra no */
 typedef struct {
     char usuario[20];
     char centro[50];
