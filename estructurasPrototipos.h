@@ -16,9 +16,12 @@ typedef struct {
 
 
 typedef struct {
-    char nombre[100];                       // Nombre del centro
-    int num_actividades;                // Cuántas actividades tiene
-    AnalisisDatos *lista_actividades;   // Vector dinámico de actividades
+	// Nombre del centro
+    char nombre[100]; 
+	// Cuántas actividades tiene
+    int num_actividades;  
+	// Vector dinámico de actividades
+    AnalisisDatos *lista_actividades;  
 } Centro;
 
 
@@ -44,18 +47,22 @@ typedef struct {
 
 
 // Prototipos de las funciones para que main las reconozca
-int iniciar_sesion(char *guardarUsuario);										// Funciones de Eva
+// Funciones de Eva
+int iniciar_sesion(char *guardarUsuario);										
 void registrar_usuario();
 void ver_favoritos(const char *nombre_fichero, const char *usuarioLogueado);
 void eliminar_favorito(Favorito fav, const char *nombreFichFav, const char *usuarioLogueado);
 
-Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos); 		// Funciones de Alba
+// Funciones de Alba
+Centro crear_centro_por_nombre(const char *nombre, AnalisisDatos *datos, int num_datos); 		
 int mostrar_centros(AnalisisDatos *datos, int num_datos, char centros[][100]);	
 void mostrar_actividades_centro(const Centro *c);
 void anadir_favorito(const char *nombreFichFav, const char *usuarioLogueado, const Centro *c);
 
-AnalisisDatos *lectura_fichero(const char *nombrearchivo, int *n);	// Funciones de Inés
+// Funciones de Inés
+AnalisisDatos *lectura_fichero(const char *nombrearchivo, int *n);	
 void reservar_actividad(AnalisisDatos lista[], int n);   			
 
-void ver_frecuencia(AnalisisDatos datos[], int n);      		// Funciones de Laura
+// Funciones de Laura
+void ver_frecuencia(AnalisisDatos datos[], int n);      		
 void ver_graficas_centros(AnalisisDatos datos[], int n);
