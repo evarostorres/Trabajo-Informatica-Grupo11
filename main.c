@@ -79,7 +79,8 @@ int main()
     if (InSesionExitoso)
 	{
 		// Menú principal con bucle y switch (sistema de gestión)
-	    do {
+	    do 
+		{
 	        printf("\n==============================================");
 			printf("\n SISTEMA DE GESTION DE ACTIVIDADES DEPORTIVAS ");
 			printf("\n==============================================\n");
@@ -178,7 +179,8 @@ int main()
 	                printf("Opcion no valida. Vuelve a intentarlo.\n");
 	        }
 		// El bucle se repite mientras no se pulse 0	
-	    } while (opcionMenu != 0); 
+	    } 
+		while (opcionMenu != 0); 
 		
 	    return 0;
 	}
