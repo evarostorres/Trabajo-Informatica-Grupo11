@@ -47,13 +47,16 @@ int main()
                     opcionAcceso = 3; 
                 }
                 break;
+			
             case 2: 
 				// Llamada a la función
 				registrar_usuario(); 	
 				break;
+			
             case 3: 
 				printf("Saliendo del programa...\n"); 
 				break;
+			
             default: 
 				printf("Opcion no valida.\n");
         }
