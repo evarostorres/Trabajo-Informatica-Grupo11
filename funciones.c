@@ -91,6 +91,7 @@ int iniciar_sesion(char *guardarUsuario)
 	else
 	{
         printf("\nUsuario o contrasena incorrectos. Intentalo de nuevo.\n");
+        printf("Si no tiene cuenta registrese primero.\n");
 		// Señal de fallo
         return 0; 
     }
@@ -356,15 +357,15 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 		//Aqui el usuario introduce la posición, del centro.
 		scanf("%i", &opcion_centro); 
 		
-	}
-	while (opcion_centro<1 || opcion_centro>num_centros);
+	}while (opcion_centro<1 || opcion_centro>65);
+	
 	// En el primer argumento le restamos 1 porque es una cadena
 	strcpy(nombre_centro, centros[opcion_centro - 1]);		
 	
 	// LLAMADA A FUNCIÓN 2
 	Centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 
-	// Imprimios la lista de actividades
+	// Imprimimos la lista de actividades
 	printf("\n-------Lista de actividades por centro -------\n");
 
 	// El punto sirve para acceder a la estructura
@@ -381,16 +382,15 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 	// Selección de la  actividad q desea reservar
 	do
 	{
-		printf("\nSeleccione el numero de la actividad a la que se quiere apuntar: ");
-		scanf("%i", &opcion_act);	
-	}
-		while (opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
+		printf("\nSeleccione el numero de la actividad a la que se quiere apuntar (1-65): ");
+		scanf("%i", &opcion_act);
+			
+	}while (opcion_act<1 || opcion_act > Centro_usuario.num_actividades);
 	
 	opcion_act--;
 	
 	while(salir ==0)
 	{
-
 		// Ahora reservamos la actividad
 		if (Centro_usuario.lista_actividades[opcion_act].libres > 0)
 		{
