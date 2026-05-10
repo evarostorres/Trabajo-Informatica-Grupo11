@@ -261,6 +261,7 @@ int mostrar_centros(AnalisisDatos *datos, int num_datos, char centros[][100])
             num_centros++;
         }
 	}
+	return num_centros;
 }
 
 
@@ -353,11 +354,11 @@ void reservar_actividad(AnalisisDatos lista[], int n)
 	do
 	{ 
 		
-		printf("\nSeleccione el numero del centro al que se quiere apuntar: ");
+		printf("\nSeleccione el numero del centro al que se quiere apuntar(1-65): ");
 		//Aqui el usuario introduce la posición, del centro.
 		scanf("%i", &opcion_centro); 
 		
-	}while (opcion_centro<1 || opcion_centro>65);
+	}while (opcion_centro<1 || opcion_centro>num_centros);
 	
 	// En el primer argumento le restamos 1 porque es una cadena
 	strcpy(nombre_centro, centros[opcion_centro - 1]);		

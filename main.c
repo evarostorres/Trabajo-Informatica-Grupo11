@@ -11,8 +11,8 @@
 int main()
 {
 	int opcionAcceso;
-	// Bandera para saber si podemos pasar al menú principal
-	int InSesionExitoso = 0;	
+	int InSesionExitoso = 0;	// Bandera para saber si podemos pasar al menú principal
+	char usuarioLogueado[MAX_LONG];
 	
 	int opcionMenu;
 	
@@ -27,8 +27,7 @@ int main()
 	char opcion;
 	
 	// Iniciamos sesión o nos registramos antes de entrar al menú (sistema de acceso)
-    do 
-	{
+    do {
         printf("\n********** SISTEMA DE ACCESO **********\n");
         printf("1. Iniciar Sesion\n");
         printf("2. Registrarse\n");
@@ -36,8 +35,7 @@ int main()
         printf("\nSeleccione una opcion: ");
         scanf("%d", &opcionAcceso);
 
-        switch (opcionAcceso) 
-		{
+        switch (opcionAcceso) {
             case 1: 
 				// Si la función devuelve 1, se ha iniciado sesión y forzamos salida del bucle
                 if (iniciar_sesion(usuarioLogueado) == 1)
@@ -47,27 +45,23 @@ int main()
                     opcionAcceso = 3; 
                 }
                 break;
-			
             case 2: 
 				// Llamada a la función
 				registrar_usuario(); 	
 				break;
-			
             case 3: 
 				printf("Saliendo del programa...\n"); 
 				break;
-			
             default: 
 				printf("Opcion no valida.\n");
         }
-    } 
-	while (opcionAcceso != 3);
+    } while (opcionAcceso != 3);
     
-    // Se abre y se lee el fichero de datos
+    //Se abre y se lee el fichero de datos
     int n = 0;
     AnalisisDatos *lista = NULL;
 
-	// Función de lectura del fichero de datos
+	//Función de lectura del fichero de datos
     lista = lectura_fichero("dataset.csv", &n);		
 
     if (lista == NULL) 
@@ -79,8 +73,7 @@ int main()
     if (InSesionExitoso)
 	{
 		// Menú principal con bucle y switch (sistema de gestión)
-	    do 
-		{
+	    do {
 	        printf("\n==============================================");
 			printf("\n SISTEMA DE GESTION DE ACTIVIDADES DEPORTIVAS ");
 			printf("\n==============================================\n");
@@ -97,10 +90,10 @@ int main()
 			switch(opcionMenu) 
 			{
 				case 1:
-					// Crear estructura Centro a partir de los datos
+					//Crear estructura Centro a partir de los datos
 				    centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 				
-					// Mostramos al usuario la lista de centros 
+					//Mostramos al usuario la lista de centros 
 					printf("\nLista de centros disponibles:\n");
 					printf("-------------------------------\n");
 					
@@ -111,7 +104,7 @@ int main()
 					scanf(" %d", &opcion);
 				
 					
-					// Comprobación de si la opción es válida
+					//Comprobación de si la opción es válida
 					if (opcion < 1 || opcion > num_centros)
 					{
 					    printf("Opcion no valida\n");
@@ -120,14 +113,14 @@ int main()
 				
 					strcpy(nombre_centro, centros[opcion - 1]);
 					
-					// Agrupamos las actividades por centro
+					//Agrupamos las actividades por centro
 					centro_usuario = crear_centro_por_nombre(nombre_centro, lista, n);
 				
 				
-				    // Mostrar actividades
+				    //Mostrar actividades
 				    mostrar_actividades_centro(&centro_usuario);
 					
-					// Opcion de añadir a favoritos
+					//Opcion de añadir a favoritos
 					char opcionAnadirFav;
 					printf("\nQuiere anadir alguna actividad a favoritos? (s/n): ");
 					scanf(" %c", &opcionAnadirFav);
@@ -136,7 +129,7 @@ int main()
 					{
 					    anadir_favorito("favoritos.txt", usuarioLogueado, &centro_usuario);
 					    
-						// Opción de ver favoritos (si existan o no)
+						//Opción de ver favoritos (si existan o no)
 						char opcionVerFav;
 						printf("\nQuiere ver sus favoritos? (s/n): ");
 						scanf(" %c", &opcionVerFav);
@@ -152,7 +145,7 @@ int main()
 	                break;
 				
 				case 3:
-	                // Mostramos al usuario la lista de centros 
+	                //Mostramos al usuario la lista de centros 
 					printf("\nLista de centros disponibles:\n");
 					printf("-------------------------------\n");
 					num_centros = mostrar_centros(lista, n, centros);
@@ -172,20 +165,19 @@ int main()
 	                break;
 				
 	            case 0:
-	                printf("Saliendo del programa. ¡Adios!\n");
+	                printf("Saliendo del programa. Adios!\n");
 	                break;
 				
 	            default:
 	                printf("Opcion no valida. Vuelve a intentarlo.\n");
 	        }
 		// El bucle se repite mientras no se pulse 0	
-	    } 
-		while (opcionMenu != 0); 
+	    } while (opcionMenu != 0); 
 		
 	    return 0;
 	}
 	
-	// Liberamos memoria 
+	//Liberamos memoria 
 	free(centro_usuario.lista_actividades);
 	free(lista);
 	
